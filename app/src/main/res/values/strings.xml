@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">pplayer</string>
+
+    <string name="title_activity_video_player">VideoPlayerActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_video_player_loader">VideoPlayerLoader</string>
+</resources>
