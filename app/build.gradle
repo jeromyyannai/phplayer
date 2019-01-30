@@ -33,6 +33,9 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

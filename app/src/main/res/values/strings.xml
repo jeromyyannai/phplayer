@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">pplayer</string>
+    <string name="app_name">PhPlayer</string>
 
     <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="dummy_button">Dummy Button</string>
