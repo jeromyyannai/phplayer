@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.support.v4.print.PrintHelper.ORIENTATION_LANDSCAPE;
 
 public class UserStorage {
     private static  UserStorage ourInstance;;
@@ -77,14 +78,18 @@ public class UserStorage {
     }
 
     public int getColumns() {
+        if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+                return columns-2;
         return columns;
     }
 
     public void setColumns(int columns) {
         if (columns<1 ||columns>10)
             return;
-        this.columns = columns;
 
+        this.columns = columns;
+        if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+            columns+=2;
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("columns", columns);
         editor.commit();
