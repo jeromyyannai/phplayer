@@ -25,11 +25,12 @@ import java.util.List;
 public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapter.ViewHolder> {
     private List<CategoryItem> categories;
     private Context context;
+    private int textSize;
 
-    public CategoryDataAdapter(Context context, List<CategoryItem> categories) {
+    public CategoryDataAdapter(Context context, List<CategoryItem> categories, int textSize) {
         this.context = context;
         this.categories = categories;
-
+        this.textSize = textSize;
     }
 
     @Override
@@ -49,6 +50,7 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
         Glide.with(context).load(categories.get(i).Image).into(viewHolder.img);
         viewHolder.textView.setText(categories.get(i).Title);
         viewHolder.item = categories.get(i);
+        viewHolder.textView.setTextSize(textSize);
     }
 
     @Override
@@ -79,6 +81,13 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
         }
     }
 
+    public void setTextSizes(int textSize) {
+        this.textSize += textSize;
+        notifyDataSetChanged();
+    }
+    public int getTextSize(){
+        return textSize;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

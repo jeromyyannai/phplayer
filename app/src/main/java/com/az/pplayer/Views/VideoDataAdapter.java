@@ -26,11 +26,12 @@ import java.util.List;
 public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.ViewHolder> {
     private List<VideoItem> videoItems;
     private Context context;
+    private int textSize;
 
-    public VideoDataAdapter(Context context, List<VideoItem> videoItems) {
+    public VideoDataAdapter(Context context, List<VideoItem> videoItems, int textSize) {
         this.context = context;
         this.videoItems = videoItems;
-
+        this.textSize = textSize;
     }
 
     @Override
@@ -50,8 +51,16 @@ public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.Vie
         Glide.with(context).load(videoItems.get(i).Image).into(viewHolder.img);
         viewHolder.textView.setText(videoItems.get(i).Title);
         viewHolder.item = videoItems.get(i);
+        viewHolder.textView.setTextSize(textSize);
     }
 
+    public void setTextSizes(int textSize) {
+        this.textSize += textSize;
+        notifyDataSetChanged();
+    }
+    public int getTextSize(){
+        return textSize;
+    }
     @Override
     public int getItemCount() {
         return videoItems.size();
