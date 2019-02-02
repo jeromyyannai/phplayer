@@ -41,23 +41,21 @@ List<VideoItem> Video;
     private ScaleGestureDetector mScaleGestureDetector;
     RecyclerView recyclerView;
     SwipyRefreshLayout mSwipyRefreshLayout;
-    int pageCounter=1;
-
+    private String requestUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Intent intent = getIntent();
-         String requestUri = intent.getStringExtra("url");
-         if (!(requestUri != null && !requestUri.isEmpty())){
-             requestUri = "/video";
-         }
-        final String catUrl  = Url.MainUrl +requestUri;
+        requestUrl = intent.getStringExtra("url");
+        final String catUrl  = prepareUrl(requestUrl);
 
         setupPinch();
+
         Video = new ArrayList<>();
         if (DataHolder.Size(catUrl)==0) {
-            LoadSite(catUrl);
+            LoadSite(DataHolder.Get(catUrl).FullUrl());
         } else {
             ShowVideos(catUrl);
         }
@@ -67,20 +65,28 @@ List<VideoItem> Video;
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
                 Log.d("MainActivity", "Refresh triggered at "
                         + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+                boolean result = false;
                 if (direction == SwipyRefreshLayoutDirection.TOP) {
-                    if (pageCounter < 1) {
-                        pageCounter = 1;
-                        return;
-                    }
-                    pageCounter--;
+                    result = DataHolder.Get(catUrl).DownPageNumber();
                 } else if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
-                    pageCounter++;
+                    result = DataHolder.Get(catUrl).UpPageNumber();
                 }
 
-                LoadSite(catUrl + (catUrl.indexOf('?') == -1 ? "?" : "&") + "page=" + pageCounter);
+                if (result)
+                    LoadSite(DataHolder.Get(catUrl).FullUrl());
             }
         });
 
+
+    }
+
+    String prepareUrl(String url){
+
+
+        if (!(url != null && !url.isEmpty())){
+            url = "/video";
+        }
+        return Url.MainUrl +url;
 
     }
 
@@ -94,6 +100,7 @@ List<VideoItem> Video;
                     @Override
                     public void run() {
                         //imageView = (ImageView) findViewById(R.id.imageView);
+                        mSwipyRefreshLayout.setRefreshing(false);
                        ShowVideos(catUrl);
                     }
                 });
@@ -112,7 +119,9 @@ List<VideoItem> Video;
         recyclerView.setLayoutManager(gridLayoutManager);
 
 
-        VideoDataAdapter dataAdapter = new VideoDataAdapter(getApplicationContext(), DataHolder.Get(catUrl),UserStorage.Get().getFontSize());
+        VideoDataAdapter dataAdapter = new VideoDataAdapter(getApplicationContext(),
+                DataHolder.Get(catUrl).CurrentVideo(),
+                UserStorage.Get().getFontSize());
         recyclerView.setAdapter(dataAdapter);
     }
     private void setupPinch() {
