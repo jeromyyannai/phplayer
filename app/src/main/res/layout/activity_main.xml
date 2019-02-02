@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.az.pplayer.Base.PinchView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nsView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
+        android:id="@+id/swipyrefreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srl_direction="both">
+    <com.az.pplayer.Base.PinchView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,4 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-</LinearLayout></com.az.pplayer.Base.PinchView>
+</LinearLayout>
+
+</com.az.pplayer.Base.PinchView>
+</com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>

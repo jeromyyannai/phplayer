@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
@@ -20,6 +21,8 @@ import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.CategoryDataAdapter;
 import com.az.pplayer.Views.CategoryViewActivity;
 import com.az.pplayer.Views.VideoDataAdapter;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,33 +30,61 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PinchView.IOnTouchListener{
 List<VideoItem> Video;
-private String catUrl;
+//private String catUrl;
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
     RecyclerView recyclerView;
+    SwipyRefreshLayout mSwipyRefreshLayout;
+    int pageCounter=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
-         catUrl = Url.MainUrl+ intent.getStringExtra("url");
+         String requestUri = intent.getStringExtra("url");
+         if (!(requestUri != null && !requestUri.isEmpty())){
+             requestUri = "/video";
+         }
+        final String catUrl  = Url.MainUrl +requestUri;
+
         setupPinch();
         Video = new ArrayList<>();
         if (DataHolder.Size(catUrl)==0) {
-            LoadSite();
+            LoadSite(catUrl);
         } else {
-            ShowVideos();
+            ShowVideos(catUrl);
         }
+        mSwipyRefreshLayout = findViewById(R.id.swipyrefreshlayout);
+        mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                Log.d("MainActivity", "Refresh triggered at "
+                        + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+                if (direction == SwipyRefreshLayoutDirection.TOP) {
+                    if (pageCounter < 1) {
+                        pageCounter = 1;
+                        return;
+                    }
+                    pageCounter--;
+                } else if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+                    pageCounter++;
+                }
+
+                LoadSite(catUrl + (catUrl.indexOf('?') == -1 ? "?" : "&") + "page=" + pageCounter);
+            }
+        });
+
 
     }
 
-    void LoadSite(){
+    void LoadSite(final String  catUrl){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -63,19 +94,17 @@ private String catUrl;
                     @Override
                     public void run() {
                         //imageView = (ImageView) findViewById(R.id.imageView);
-                       ShowVideos();
+                       ShowVideos(catUrl);
                     }
                 });
             }
         }).start();
     }
 
-    void ShowVideos(){
+    void ShowVideos(String catUrl){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
-        int columns = width / 200;
           recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);
 

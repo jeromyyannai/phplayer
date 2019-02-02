@@ -79,8 +79,8 @@ public class UserStorage {
 
     public int getColumns() {
         if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
-                return columns-2;
-        return columns;
+                return columns-2>0?columns-2:1;
+        return columns>0?columns:1;
     }
 
     public void setColumns(int columns) {
