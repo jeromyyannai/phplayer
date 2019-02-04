@@ -17,7 +17,7 @@ public class VideoItemsPage {
 
     public VideoItemsPage(String uri){
         Items = new HashMap<>();
-        currentPageNumber =0;
+        currentPageNumber =1;
         this.uri = uri;
     }
 
@@ -27,7 +27,7 @@ public class VideoItemsPage {
     }
     public boolean DownPageNumber()
     {
-        if (currentPageNumber>0) {
+        if (currentPageNumber>1) {
             currentPageNumber--;
             return true;
         }
@@ -52,6 +52,9 @@ public class VideoItemsPage {
     }
 
     public List<VideoItem> CurrentVideo(){
+        List<VideoItem> items = Items.get(currentPageNumber);
+        if (items ==null)
+            return new ArrayList<>();
         return Items.get(currentPageNumber);
     }
 

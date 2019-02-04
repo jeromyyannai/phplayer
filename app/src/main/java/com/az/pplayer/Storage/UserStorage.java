@@ -36,8 +36,10 @@ public class UserStorage {
         rescentCats = new Gson().fromJson(rescentCatsstr, listType);
         if (java.util.Arrays.asList(resolutions).indexOf(resolution) ==-1)
             resolution = "480";
-        columns = preferences.getInt("columns",3);
+        columns = Math.max(preferences.getInt("columns",3),1);
         fontSize = preferences.getInt("fontSize",10);
+        if (fontSize ==0)
+            fontSize = 10;
     }
 
     private String resolution = "480";

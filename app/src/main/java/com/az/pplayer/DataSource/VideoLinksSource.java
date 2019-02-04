@@ -25,8 +25,9 @@ public class VideoLinksSource {
             for (Element el: images)
             {
                 String imageUrl = el.attr("data-image");
-                if (imageUrl == "")
-                    imageUrl = el.attr("data-src");
+                if (imageUrl.length()>0)
+                    continue;
+                imageUrl = el.attr("data-src");
                 if (imageUrl == "")
                     imageUrl = el.attr("data-thumb_url");
                 Video.add(new VideoItem(el.attr("title"),

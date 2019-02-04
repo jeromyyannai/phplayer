@@ -74,6 +74,9 @@ List<VideoItem> Video;
 
                 if (result)
                     LoadSite(DataHolder.Get(catUrl).FullUrl());
+
+                mSwipyRefreshLayout.setRefreshing(false);
+
             }
         });
 
@@ -100,7 +103,6 @@ List<VideoItem> Video;
                     @Override
                     public void run() {
                         //imageView = (ImageView) findViewById(R.id.imageView);
-                        mSwipyRefreshLayout.setRefreshing(false);
                        ShowVideos(catUrl);
                     }
                 });
