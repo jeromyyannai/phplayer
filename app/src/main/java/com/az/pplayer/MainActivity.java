@@ -74,8 +74,8 @@ List<VideoItem> Video;
 
                 if (result)
                     LoadSite(DataHolder.Get(catUrl).FullUrl());
-
-                mSwipyRefreshLayout.setRefreshing(false);
+                else
+                    mSwipyRefreshLayout.setRefreshing(false);
 
             }
         });
@@ -102,6 +102,7 @@ List<VideoItem> Video;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        mSwipyRefreshLayout.setRefreshing(false);
                         //imageView = (ImageView) findViewById(R.id.imageView);
                        ShowVideos(catUrl);
                     }
