@@ -1,16 +1,24 @@
 package com.az.pplayer;
 
 import android.content.Intent;
-import android.support.annotation.MainThread;
-import android.support.annotation.UiThread;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.az.pplayer.Base.PinchView;
 import com.az.pplayer.Constants.Url;
@@ -18,34 +26,33 @@ import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Storage.UserStorage;
-import com.az.pplayer.Views.CategoryDataAdapter;
-import com.az.pplayer.Views.CategoryViewActivity;
 import com.az.pplayer.Views.VideoDataAdapter;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements PinchView.IOnTouchListener{
-List<VideoItem> Video;
-//private String catUrl;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, PinchView.IOnTouchListener{
+
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
     RecyclerView recyclerView;
     SwipyRefreshLayout mSwipyRefreshLayout;
     private String requestUrl;
+    List<VideoItem> Video;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         Intent intent = getIntent();
         requestUrl = intent.getStringExtra("url");
@@ -79,9 +86,58 @@ List<VideoItem> Video;
 
             }
         });
-
-
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
     String prepareUrl(String url){
 
@@ -104,7 +160,7 @@ List<VideoItem> Video;
                     public void run() {
                         mSwipyRefreshLayout.setRefreshing(false);
                         //imageView = (ImageView) findViewById(R.id.imageView);
-                       ShowVideos(catUrl);
+                        ShowVideos(catUrl);
                     }
                 });
             }
@@ -115,7 +171,7 @@ List<VideoItem> Video;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
-          recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), UserStorage.Get().getColumns());

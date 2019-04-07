@@ -1,21 +1,34 @@
 package com.az.pplayer.Views;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.Data.ExoPlayerVideoHandler;
+import com.az.pplayer.MainActivity;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Models.VideoUrl;
 import com.az.pplayer.R;
@@ -49,6 +62,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private SimpleExoPlayerView mSimpleExoPlayerView;
     private ImageButton mIbFullScreen;
+    private  ImageButton mMenuButton;
+    DrawerLayout mDrawerLayout;
+    RecyclerView mDrawerList;
+
 
     private boolean shouldDestroyVideo = true;
     @Override
@@ -57,6 +74,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_player);
         Intent intent = getIntent();
         mVideoUrl = intent.getStringExtra(INTENT_EXTRA_VIDEO_URL);
+
         initializePlayer();
 //        Fragment fragment = new VideoPlayerFragment();
 //
@@ -87,6 +105,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
                     }
                 });
+        mMenuButton = findViewById(R.id.menu_btn);
+        mMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
+                drawer.openDrawer(GravityCompat.END);
+            }
+        });
 
     }
 
@@ -115,4 +141,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
             ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
         }
     }
+
+    // Get the x and y position after the button is draw on screen
+// (It's important to note that we can't get the position in the onCreate(),
+// because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
+
+
+    // The method that displays the popup.
+
 }

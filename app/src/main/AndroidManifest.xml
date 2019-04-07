@@ -23,22 +23,23 @@
         </activity>
         <activity
             android:name=".Views.VideoPlayerActivity"
-            android:screenOrientation="landscape"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-
             android:label="@string/title_activity_video_player"
-            android:theme="@style/VideoPlayerTheme"/>
-        <activity android:name=".Views.SmallPlayerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/VideoPlayerTheme" />
+        <activity
+            android:name=".Views.SmallPlayerActivity"
             android:noHistory="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".Views.VideoPlayerLoader"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:label="@string/title_activity_video_player_loader"
-android:noHistory="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"/>
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
 

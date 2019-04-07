@@ -68,10 +68,19 @@
             <ImageButton
                 android:id="@+id/exo_fullscreen_btn"
                 style="@style/ExoMediaButton.Play"
+                android:layout_width="50dp"
+                android:layout_alignParentTop="true"
+
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_fullscreen" />
+            <ImageButton
+                android:id="@+id/menu_btn"
+                style="@style/ExoMediaButton.Play"
+                android:layout_width="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
 
-                android:src="@drawable/ic_fullscreen" />
+                android:src="@drawable/ic_menu_black_24dp" />
 
         </LinearLayout>
 

@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="end">
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/video_nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:background="@color/exo_edit_mode_background_color"
+
+        android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.design.widget.NavigationView>
 <com.google.android.exoplayer2.ui.SimpleExoPlayerView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/player_view"
     android:keepScreenOn="true"
@@ -6,3 +33,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"/>
+</android.support.v4.widget.DrawerLayout>
