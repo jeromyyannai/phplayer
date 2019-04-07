@@ -75,7 +75,7 @@ public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.Vie
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            Intent intent = new Intent(v.view.getContext(),VideoPlayerLoader.class);
+            Intent intent = new Intent(v.view.getContext(),VideoPlayerActivity.class);
             intent.putExtra("url", v.item.Video);
             v.view.getContext().startActivity(intent);
             return super.onDoubleTap(e);

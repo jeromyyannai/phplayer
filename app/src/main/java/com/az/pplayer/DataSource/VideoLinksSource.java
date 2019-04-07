@@ -20,12 +20,23 @@ public class VideoLinksSource {
         try {
 
             Document doc = Jsoup.connect(link).get();
+            return ParseLinks(doc);
+
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Video;
+    }
+    public static List<VideoItem> ParseLinks( Document doc) {
+        List<VideoItem> Video = new ArrayList<>();
+        try {
             Elements images = doc.select("img.rotating");
 
-            for (Element el: images)
-            {
+            for (Element el : images) {
                 String imageUrl = el.attr("data-image");
-                if (imageUrl.length()>0)
+                if (imageUrl.length() > 0)
                     continue;
                 imageUrl = el.attr("data-src");
                 if (imageUrl == "")
@@ -36,12 +47,9 @@ public class VideoLinksSource {
                         el.attr("data-video-id"),
                         imageUrl));
             }
-
-
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        catch (Exception ex){}
         return Video;
     }
 }
+
