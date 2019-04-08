@@ -6,44 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="end">
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/video_nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:background="@color/exo_edit_mode_background_color"
-
-        android:fitsSystemWindows="true">
+    tools:openDrawer="start">
 
 
-        <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/swipyrefreshlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srl_direction="both">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-        </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
-
-    </android.support.design.widget.NavigationView>
-<com.google.android.exoplayer2.ui.SimpleExoPlayerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/player_view"
     android:keepScreenOn="true"
     android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"/>
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/swipyrefreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srl_direction="both"
+        android:visibility="gone"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/video_nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="@android:color/bright_foreground_light_disabled"
+        app:menu="@menu/video_player_menu"
+        >
+
+
+
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

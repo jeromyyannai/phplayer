@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceView;
@@ -74,6 +77,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SwipyRefreshLayout mSwipyRefreshLayout;
+    VisibleView visibleView;
 
     private boolean shouldDestroyVideo = true;
     @Override
@@ -83,7 +87,32 @@ public class VideoPlayerActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         mVideoUrl= intent.getStringExtra("url");
+        mSwipyRefreshLayout = findViewById(R.id.swipyrefreshlayout);
+        mSimpleExoPlayerView = findViewById(R.id.player_view);
+        setupDrawer();
+
         LoadVideo();
+    }
+
+    void setupDrawer(){
+        NavigationView  nv = (NavigationView)findViewById(R.id.video_nav_view);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.nav_related:
+                        visibleView = VisibleView.related;
+                        mSimpleExoPlayerView.setVisibility(View.GONE);
+                        mSwipyRefreshLayout.setVisibility(View.VISIBLE);
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
+                drawer.closeDrawer(Gravity.LEFT);
+                return false;
+
+            }
+        });
     }
 
     void LoadVideo(){
@@ -198,7 +227,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
-                drawer.openDrawer(GravityCompat.END);
+                drawer.openDrawer(Gravity.LEFT);
             }
         });
 
@@ -237,4 +266,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     // The method that displays the popup.
 
+}
+enum VisibleView{
+    video,
+    related
 }

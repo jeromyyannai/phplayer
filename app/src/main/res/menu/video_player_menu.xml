@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_related"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Related videos" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_star_border"
+            android:title="Add to favorites" />
+        <item
+            android:id="@+id/nav_download"
+            android:icon="@drawable/ic_file_download"
+            android:title="Download" />
+
+    </group>
+
+</menu>
