@@ -43,7 +43,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="@android:color/bright_foreground_light_disabled"
+        android:background="@android:color/black"
         app:menu="@menu/video_player_menu"
         >
 

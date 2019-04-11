@@ -8,14 +8,22 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
+
+
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_start"
-        app:menu="@menu/activity_start_drawer" />
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header_start"
+            app:menu="@menu/activity_start_drawer" >
+
+
+    </android.support.design.widget.NavigationView>
+
+
 
     <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,7 +50,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 
 
