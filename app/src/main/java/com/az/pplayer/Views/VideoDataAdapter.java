@@ -86,9 +86,17 @@ public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.Vie
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             v.surfaceView.setVideoURI(Uri.parse(v.item.Preview));
-            v.surfaceView.start();
+            v.surfaceView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.setVolume(0,0);
+
+                }
+            });
             v.img.setVisibility(View.GONE);
             v.surfaceView.setVisibility(View.VISIBLE);
+            v.surfaceView.start();
+
 
             v.surfaceView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override

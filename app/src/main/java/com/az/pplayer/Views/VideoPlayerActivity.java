@@ -104,6 +104,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 switch (id) {
                     case R.id.nav_related:
                         visibleView = VisibleView.related;
+                        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
                         mSimpleExoPlayerView.setVisibility(View.GONE);
                         mSwipyRefreshLayout.setVisibility(View.VISIBLE);
                 }
@@ -242,21 +243,24 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         shouldDestroyVideo = false;
+        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
         super.onBackPressed();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        ExoPlayerVideoHandler.getInstance().goToBackground();
+       // ExoPlayerVideoHandler.getInstance().goToBackground();
+        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (shouldDestroyVideo) {
-            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+           // ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
         }
+        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
     }
 
     // Get the x and y position after the button is draw on screen
