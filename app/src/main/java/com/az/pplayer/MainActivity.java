@@ -24,6 +24,8 @@ import com.az.pplayer.Base.PinchView;
 import com.az.pplayer.Constants.Url;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
+import com.az.pplayer.Menu.IMenuItemClick;
+import com.az.pplayer.Menu.LeftMenu;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.VideoDataAdapter;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PinchView.IOnTouchListener{
+        implements NavigationView.OnNavigationItemSelectedListener, PinchView.IOnTouchListener, IMenuItemClick {
 
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = getIntent();
         requestUrl = intent.getStringExtra("url");
         final String catUrl  = prepareUrl(requestUrl);
-
+        LeftMenu menu = new LeftMenu(this);
         setupPinch();
 
         Video = new ArrayList<>();
@@ -209,6 +211,12 @@ public class MainActivity extends AppCompatActivity
         UserStorage.Get().setFontSize(((VideoDataAdapter)recyclerView.getAdapter()).getTextSize());
         return true;
     }
+
+    @Override
+    public void MenuItemClick(com.az.pplayer.Models.MenuItem item) {
+
+    }
+
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
         @Override
