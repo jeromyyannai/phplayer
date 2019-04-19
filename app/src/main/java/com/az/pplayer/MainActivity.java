@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PinchView.IOnTouchListener, IMenuItemClick {
+        implements  PinchView.IOnTouchListener {
 
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
@@ -52,9 +52,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         Intent intent = getIntent();
         requestUrl = intent.getStringExtra("url");
@@ -115,24 +117,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_categories) {
-            // Handle the camera action
-        } else if (id == R.id.nav_download) {
-
-        } else if (id == R.id.nav_favorites) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
 
     String prepareUrl(String url){
@@ -212,10 +197,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void MenuItemClick(com.az.pplayer.Models.MenuItem item) {
 
-    }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 

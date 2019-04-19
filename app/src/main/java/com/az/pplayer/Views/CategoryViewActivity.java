@@ -13,12 +13,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.az.pplayer.Base.PinchView;
 import com.az.pplayer.Data.CategoryHolder;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.CategorySource;
 import com.az.pplayer.DataSource.VideoLinksSource;
+import com.az.pplayer.Menu.LeftMenu;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.R;
@@ -27,7 +32,7 @@ import com.az.pplayer.Storage.UserStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryViewActivity  extends AppCompatActivity implements PinchView.IOnTouchListener,NavigationView.OnNavigationItemSelectedListener {
+public class CategoryViewActivity  extends AppCompatActivity implements PinchView.IOnTouchListener {
     List<CategoryItem> Categories;
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
@@ -41,7 +46,9 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
+        LeftMenu menu = new LeftMenu(this);
+
         setupPinch();
         Categories = new ArrayList<>();
         if (CategoryHolder.Size()==0) {
@@ -119,26 +126,7 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
         return true;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_search) {
-            // Handle the camera action
-        } else if (id == R.id.nav_favorites) {
-
-        } else if (id == R.id.nav_categories) {
-
-        } else if (id == R.id.nav_download) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {

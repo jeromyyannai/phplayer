@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -23,9 +24,11 @@ public class LeftMenuDataAdapter extends RecyclerView.Adapter<LeftMenuDataAdapte
 
     private List<MenuItem> items;
     private Context context;
-    public  LeftMenuDataAdapter(Context context){
+    IMenuItemClick clickHandler;
+    public  LeftMenuDataAdapter(Context context,IMenuItemClick clickHandler){
         items = LeftMenuItems.Get();
         this.context = context;
+        this.clickHandler = clickHandler;
     }
 
     @NonNull
@@ -55,19 +58,25 @@ public class LeftMenuDataAdapter extends RecyclerView.Adapter<LeftMenuDataAdapte
 
         ImageView img;
         TextView textView;
-
+        LinearLayout menuLayout;
         View view;
 
         public MenuViewHolder(final View view) {
             super(view);
             img = view.findViewById(R.id.ivNavigation);
             textView = view.findViewById(R.id.tvNavigationName);
+            menuLayout = view.findViewById(R.id.menuLayout);
             this.view = view;
-
-            view.setOnClickListener(new View.OnClickListener() {
+            menuLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((IMenuItemClick)context).MenuItemClick(items.get((int)view.getTag()));
+                    clickHandler.MenuItemClick(items.get((int)view.getTag()));
+                }
+            });
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickHandler.MenuItemClick(items.get((int)view.getTag()));
                 }
             });
 
