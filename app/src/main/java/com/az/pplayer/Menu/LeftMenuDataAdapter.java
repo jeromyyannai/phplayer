@@ -67,13 +67,8 @@ public class LeftMenuDataAdapter extends RecyclerView.Adapter<LeftMenuDataAdapte
             textView = view.findViewById(R.id.tvNavigationName);
             menuLayout = view.findViewById(R.id.menuLayout);
             this.view = view;
-            menuLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickHandler.MenuItemClick(items.get((int)view.getTag()));
-                }
-            });
-            textView.setOnClickListener(new View.OnClickListener() {
+
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     clickHandler.MenuItemClick(items.get((int)view.getTag()));

@@ -11,13 +11,48 @@
 
 
 
+
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/swipyrefreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srl_direction="both">
+    <com.az.pplayer.Base.PinchView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+
+</com.az.pplayer.Base.PinchView>
+</com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+
     <android.support.design.widget.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-           >
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        >
 
         <android.support.constraint.ConstraintLayout android:orientation="vertical"
             android:layout_height="match_parent"
@@ -40,13 +75,13 @@
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout"
                 app:layout_constraintTop_toBottomOf="@+id/include">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/left_menu_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-               >
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/left_menu_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 
-            </android.support.v7.widget.RecyclerView>
+                </android.support.v7.widget.RecyclerView>
             </android.support.v4.widget.NestedScrollView>
 
             <LinearLayout
@@ -82,37 +117,4 @@
     </android.support.design.widget.NavigationView>
 
 
-
-    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/swipyrefreshlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srl_direction="both">
-    <com.az.pplayer.Base.PinchView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/nsView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-
-
-</com.az.pplayer.Base.PinchView>
-</com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 </android.support.v4.widget.DrawerLayout>
