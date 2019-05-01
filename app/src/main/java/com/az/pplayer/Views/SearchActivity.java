@@ -1,5 +1,6 @@
-package com.az.pplayer;
+package com.az.pplayer.Views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,6 +15,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.az.pplayer.Base.PinchView;
 import com.az.pplayer.Constants.Url;
@@ -22,17 +27,18 @@ import com.az.pplayer.DataSource.VideoLinksSource;
 import com.az.pplayer.Menu.LeftMenu;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
+import com.az.pplayer.R;
 import com.az.pplayer.Storage.UserStorage;
-import com.az.pplayer.Views.VideoDataAdapter;
 import com.google.gson.Gson;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements  PinchView.IOnTouchListener {
+public class SearchActivity extends AppCompatActivity
+        implements  PinchView.IOnTouchListener, MaterialSearchBar.OnSearchActionListener, SwipyRefreshLayout.OnRefreshListener {
 
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
@@ -41,12 +47,18 @@ public class MainActivity extends AppCompatActivity
     private CategoryItem requestUrl;
     List<VideoItem> Video;
     LeftMenu menu;
+    MaterialSearchBar searchBar;
+
+    private String searchPattern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_search);
+        //video/search?search=big+toys&o=mr
+        searchBar = findViewById(R.id.searchBar);
+        searchBar.setOnSearchActionListener(this);
+      searchBar.disableSearch();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,40 +66,15 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        Intent intent = getIntent();
-        requestUrl = new Gson().fromJson(intent.getStringExtra("url"), CategoryItem.class);
-        final String catUrl  = prepareUrl(requestUrl.Link);
-        menu = new LeftMenu(this);
-        menu.InsertCategory(requestUrl);
-        menu.SetSelected(requestUrl.Link);
+
         setupPinch();
 
         Video = new ArrayList<>();
-        if (DataHolder.Size(catUrl)==0) {
-            LoadSite(DataHolder.Get(catUrl).FullUrl());
-        } else {
-            ShowVideos(catUrl);
-        }
+
+        search();
+
         mSwipyRefreshLayout = findViewById(R.id.swipyrefreshlayout);
-        mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh(SwipyRefreshLayoutDirection direction) {
-                Log.d("MainActivity", "Refresh triggered at "
-                        + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
-                boolean result = false;
-                if (direction == SwipyRefreshLayoutDirection.TOP) {
-                    result = DataHolder.Get(catUrl).DownPageNumber();
-                } else if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
-                    result = DataHolder.Get(catUrl).UpPageNumber();
-                }
-
-                if (result)
-                    LoadSite(DataHolder.Get(catUrl).FullUrl());
-                else
-                    mSwipyRefreshLayout.setRefreshing(false);
-
-            }
-        });
+        mSwipyRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -100,8 +87,35 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onSearchStateChanged(boolean enabled) {
 
+    }
 
+    @Override
+    public void onSearchConfirmed(CharSequence text) {
+        searchBar.setPlaceHolder(text.toString());
+        searchBar.disableSearch();
+       searchPattern = text.toString();
+       search();
+
+    }
+
+    @Override
+    public void onButtonClicked(int buttonCode) {
+
+    }
+
+    void search(){
+        if (searchPattern !=null){
+
+            if (DataHolder.Size(prepareUrl())==0) {
+                LoadSite(DataHolder.Get(prepareUrl()).FullUrl());
+            } else {
+                ShowVideos(prepareUrl());
+            }
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -118,13 +132,12 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    String prepareUrl(String url){
+    String prepareUrl(){
+        if (searchPattern==null || searchPattern=="")
+            return Url.MainUrl;
+        return Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+"&o=mr";
 
 
-        if (!(url != null && !url.isEmpty())){
-            url = "/video";
-        }
-        return Url.MainUrl +url;
 
     }
 
@@ -141,7 +154,6 @@ public class MainActivity extends AppCompatActivity
                         //imageView = (ImageView) findViewById(R.id.imageView);
                         ShowVideos(catUrl);
                         recyclerView.getLayoutManager().scrollToPosition(0);
-
                     }
                 });
             }
@@ -166,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     }
     private void setupPinch() {
         pView = findViewById(R.id.nsView);
-        mScaleGestureDetector = new ScaleGestureDetector(this, new MainActivity.ScaleListener());
+        mScaleGestureDetector = new ScaleGestureDetector(this, new SearchActivity.ScaleListener());
         pView.setOnTouchListener(this);
     }
 
@@ -179,9 +191,9 @@ public class MainActivity extends AppCompatActivity
         mScaleGestureDetector.onTouchEvent(event);
         return true;
     }
-    private boolean updateGrid(MainActivity.gridUpdateFactor updateFactor){
+    private boolean updateGrid(SearchActivity.gridUpdateFactor updateFactor){
         int currentCount =  ((GridLayoutManager)recyclerView.getLayoutManager()).getSpanCount();
-        if (updateFactor == MainActivity.gridUpdateFactor.in){
+        if (updateFactor == SearchActivity.gridUpdateFactor.in){
             if  (currentCount==10)
                 return  false;
             ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount(currentCount+1);
@@ -197,6 +209,23 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onRefresh(SwipyRefreshLayoutDirection direction) {
+        Log.d("MainActivity", "Refresh triggered at "
+                + (direction == SwipyRefreshLayoutDirection.TOP ? "top" : "bottom"));
+        boolean result = false;
+        if (direction == SwipyRefreshLayoutDirection.TOP) {
+            result = DataHolder.Get(prepareUrl()).DownPageNumber();
+        } else if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+            result = DataHolder.Get(prepareUrl()).UpPageNumber();
+        }
+
+        if (result) {
+            LoadSite(DataHolder.Get(prepareUrl()).FullUrl());
+        }
+        else
+            mSwipyRefreshLayout.setRefreshing(false);
+    }
 
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -205,9 +234,9 @@ public class MainActivity extends AppCompatActivity
         public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
             if (scaleGestureDetector.getScaleFactor() ==1)
                 return;
-            MainActivity.gridUpdateFactor factor = MainActivity.gridUpdateFactor.out;
+            SearchActivity.gridUpdateFactor factor = SearchActivity.gridUpdateFactor.out;
             if (scaleGestureDetector.getScaleFactor()<1)
-                factor = MainActivity.gridUpdateFactor.in;
+                factor = SearchActivity.gridUpdateFactor.in;
 
 //            if (scaleGestureDetector.getScaleFactor()>  1){
 //                mScaleFactor+=0.01;

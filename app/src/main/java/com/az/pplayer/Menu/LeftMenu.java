@@ -14,12 +14,15 @@ import com.az.pplayer.R;
 import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.CategoryDataAdapter;
 import com.az.pplayer.Views.CategoryViewActivity;
+import com.az.pplayer.Views.SearchActivity;
 import com.google.gson.Gson;
 
 public class LeftMenu implements IMenuItemClick{
     private Activity context;
     private RecyclerView recyclerView;
     LeftMenuDataAdapter dataAdapter;
+
+
     public LeftMenu (Activity activity)
     {
         this.context = activity;
@@ -43,8 +46,11 @@ public class LeftMenu implements IMenuItemClick{
         }
         switch (item.Id){
             case "ic_categories":
-                Intent intent = new Intent(context, CategoryViewActivity.class);
-               context.startActivity(intent);
+
+               context.startActivity(new Intent(context, CategoryViewActivity.class));
+                break;
+            case "ic_search":
+                 context.startActivity(new Intent(context, SearchActivity.class));
                 break;
         }
     }
@@ -57,4 +63,5 @@ public class LeftMenu implements IMenuItemClick{
         dataAdapter.SetSelected(id);
 
     }
+
 }

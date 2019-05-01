@@ -50,5 +50,5 @@ public String Link;
         Link = link;
     }
 
-    public enum MenuType{Main,Link}
+    public enum MenuType{Main,Link,SwitchOption}
 }

@@ -53,4 +53,19 @@
         <item name="android:padding">5dp</item>
 
     </style>
+
+    <style name="SearchBarStyle" parent="MaterialSearchBarDark">
+        <item name="mt_searchBarColor">@color/colorAccent</item>
+        <item name="mt_dividerColor">@color/colorPrimary</item>
+        <item name="mt_navIconTint">@color/white</item>
+        <item name="mt_searchIconTint">@color/orange</item>
+        <item name="mt_clearIconTint">@color/white</item>
+        <item name="mt_menuIconTint">@color/white</item>
+        <item name="mt_backIconTint">@color/white</item>
+        <item name="mt_textCursorTint">@color/white</item>
+        <item name="mt_textColor">@color/orange</item>
+        <item name="mt_hintColor">@color/white</item>
+        <item name="mt_placeholderColor">#ccc</item>
+        <item name="mt_highlightedTextColor">@color/white</item>
+    </style>
 </resources>

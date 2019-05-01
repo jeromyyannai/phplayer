@@ -41,6 +41,10 @@ public class LeftMenuDataAdapter extends RecyclerView.Adapter<LeftMenuDataAdapte
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item, parent, false);
         return new LeftMenuDataAdapter.MenuViewHolder(view);
+        } else if (viewType ==2){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item, parent, false);
+            return new LeftMenuDataAdapter.MenuViewHolder(view);
+
         }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.link_menu_item, parent, false);
         return new LeftMenuDataAdapter.MenuViewHolder(view);
@@ -51,6 +55,8 @@ public class LeftMenuDataAdapter extends RecyclerView.Adapter<LeftMenuDataAdapte
         MenuItem item = items.get(position);
         if (item.Type == MenuItem.MenuType.Link)
             return  1;
+        else if (item.Type == MenuItem.MenuType.SwitchOption)
+            return 2;
         return 0;
     }
 
