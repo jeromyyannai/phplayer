@@ -61,9 +61,13 @@ public class UserStorage {
     }
 
     public List<CategoryStorageItem> getRescentCats(){
+        if (rescentCats == null)
+            rescentCats = new ArrayList<>();
         return rescentCats;
     }
     public void AddCategory(CategoryItem item){
+        if (rescentCats == null)
+            rescentCats = new ArrayList<>();
         rescentCats.add(new CategoryStorageItem(item));
         Collections.sort(rescentCats, Collections.reverseOrder( new Comparator<CategoryStorageItem>() {
             @Override

@@ -5,6 +5,7 @@ public class MenuItem {
     private String name;
     private int drawableId;
 public  String Id;
+public String Link;
     public boolean isSelected() {
         return isSelected;
     }
@@ -29,20 +30,24 @@ public  String Id;
         this.name = name;
     }
     public MenuType Type;
-    public String Link;
 
-    public MenuItem( String name, int drawableId, String id) {
+
+    public MenuItem( String name, int drawableId, String id,boolean selected) {
         this.name = name;
         this.drawableId = drawableId;
         Id = id;
         Type = MenuType.Main;
+        isSelected = selected;
     }
 
-    public MenuItem(String name, int drawableId, String id, MenuType type) {
+    public MenuItem(String name, Integer drawableId, String id, MenuType type, String link) {
         this.name = name;
-        this.drawableId = drawableId;
+        if (drawableId != null) {
+            this.drawableId = drawableId;
+        }
         Id = id;
         Type = type;
+        Link = link;
     }
 
     public enum MenuType{Main,Link}

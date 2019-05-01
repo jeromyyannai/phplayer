@@ -198,7 +198,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
 
 
-        VideoDataAdapter dataAdapter = new VideoDataAdapter(getApplicationContext(),
+        VideoDataAdapter dataAdapter = new VideoDataAdapter(this,
                 DataHolder.Get(catUrl).CurrentVideo(),
                 UserStorage.Get().getFontSize());
         recyclerView.setAdapter(dataAdapter);

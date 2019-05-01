@@ -1,25 +1,31 @@
 package com.az.pplayer.Menu;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.az.pplayer.Data.CategoryHolder;
+import com.az.pplayer.MainActivity;
+import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.MenuItem;
 import com.az.pplayer.R;
 import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.CategoryDataAdapter;
+import com.az.pplayer.Views.CategoryViewActivity;
+import com.google.gson.Gson;
 
 public class LeftMenu implements IMenuItemClick{
     private Activity context;
     private RecyclerView recyclerView;
+    LeftMenuDataAdapter dataAdapter;
     public LeftMenu (Activity activity)
     {
         this.context = activity;
         recyclerView = (RecyclerView) context.findViewById(R.id.left_menu_container);
 
-        LeftMenuDataAdapter dataAdapter = new LeftMenuDataAdapter(context.getApplicationContext(),this);
+         dataAdapter = new LeftMenuDataAdapter(context.getApplicationContext(),this);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         recyclerView.setAdapter(dataAdapter);
@@ -27,10 +33,28 @@ public class LeftMenu implements IMenuItemClick{
 
     @Override
     public void MenuItemClick(MenuItem item) {
-        switch (item.Id){
-            case "ic_search":
+        SetSelected(item.Id);
+        if (item.Type == MenuItem.MenuType.Link){
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("url",new Gson().toJson(new CategoryItem(item.getName(), item.Link,null)));
 
+            context.startActivity(intent);
+            return;
+        }
+        switch (item.Id){
+            case "ic_categories":
+                Intent intent = new Intent(context, CategoryViewActivity.class);
+               context.startActivity(intent);
                 break;
         }
+    }
+
+    public void InsertCategory(CategoryItem item){
+        dataAdapter.InsertCategory(item);
+
+    }
+    public void SetSelected(String id){
+        dataAdapter.SetSelected(id);
+
     }
 }

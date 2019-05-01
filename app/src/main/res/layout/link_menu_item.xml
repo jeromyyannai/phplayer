@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
+        android:paddingLeft="30dp"
         android:id="@+id/menuItemLayout"
         >
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/ivNavigation"
             android:layout_centerVertical="true"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:padding="5dp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/orange"

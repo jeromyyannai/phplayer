@@ -2,33 +2,29 @@ package com.az.pplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 
 import com.az.pplayer.Base.PinchView;
 import com.az.pplayer.Constants.Url;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
-import com.az.pplayer.Menu.IMenuItemClick;
 import com.az.pplayer.Menu.LeftMenu;
+import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.VideoDataAdapter;
+import com.google.gson.Gson;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
@@ -42,9 +38,9 @@ public class MainActivity extends AppCompatActivity
     private ScaleGestureDetector mScaleGestureDetector;
     RecyclerView recyclerView;
     SwipyRefreshLayout mSwipyRefreshLayout;
-    private String requestUrl;
+    private CategoryItem requestUrl;
     List<VideoItem> Video;
-
+    LeftMenu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +55,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Intent intent = getIntent();
-        requestUrl = intent.getStringExtra("url");
-        final String catUrl  = prepareUrl(requestUrl);
-        LeftMenu menu = new LeftMenu(this);
+        requestUrl = new Gson().fromJson(intent.getStringExtra("url"), CategoryItem.class);
+        final String catUrl  = prepareUrl(requestUrl.Link);
+        menu = new LeftMenu(this);
+        menu.InsertCategory(requestUrl);
+        menu.SetSelected(requestUrl.Link);
         setupPinch();
 
         Video = new ArrayList<>();
@@ -159,7 +157,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(gridLayoutManager);
 
 
-        VideoDataAdapter dataAdapter = new VideoDataAdapter(getApplicationContext(),
+        VideoDataAdapter dataAdapter = new VideoDataAdapter(this,
                 DataHolder.Get(catUrl).CurrentVideo(),
                 UserStorage.Get().getFontSize());
         recyclerView.setAdapter(dataAdapter);

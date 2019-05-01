@@ -37,6 +37,7 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;
     RecyclerView recyclerView;
+    LeftMenu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,8 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        LeftMenu menu = new LeftMenu(this);
-
+        menu = new LeftMenu(this);
+        menu.SetSelected("ic_categories");
         setupPinch();
         Categories = new ArrayList<>();
         if (CategoryHolder.Size()==0) {
@@ -88,7 +89,7 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setNestedScrollingEnabled(false);
 
-        CategoryDataAdapter dataAdapter = new CategoryDataAdapter(getApplicationContext(), CategoryHolder.Get(),UserStorage.Get().getFontSize());
+        CategoryDataAdapter dataAdapter = new CategoryDataAdapter(this, CategoryHolder.Get(),UserStorage.Get().getFontSize());
         recyclerView.setAdapter(dataAdapter);
     }
 

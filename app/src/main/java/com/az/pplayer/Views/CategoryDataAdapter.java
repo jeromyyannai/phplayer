@@ -1,10 +1,12 @@
 package com.az.pplayer.Views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +20,9 @@ import com.az.pplayer.MainActivity;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.R;
+import com.az.pplayer.Storage.UserStorage;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -26,11 +30,16 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
     private List<CategoryItem> categories;
     private Context context;
     private int textSize;
+    private  int screenWidth;
 
     public CategoryDataAdapter(Context context, List<CategoryItem> categories, int textSize) {
         this.context = context;
         this.categories = categories;
         this.textSize = textSize;
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
     }
 
     @Override
@@ -47,6 +56,11 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
      */
     @Override
     public void onBindViewHolder(CategoryDataAdapter.ViewHolder viewHolder, int i) {
+        int colCount = UserStorage.Get().getColumns();
+        int cellWith = screenWidth/colCount;
+        int cellHeight= cellWith*131/233;
+        viewHolder.img.getLayoutParams().height = cellHeight;
+
         Glide.with(context).load(categories.get(i).Image).into(viewHolder.img);
         viewHolder.textView.setText(categories.get(i).Title);
         viewHolder.item = categories.get(i);
@@ -75,7 +89,8 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Intent intent = new Intent(v.view.getContext(),MainActivity.class);
-            intent.putExtra("url", v.item.Link);
+            intent.putExtra("url",new Gson().toJson(v.item));
+            UserStorage.Get().AddCategory(v.item);
             v.view.getContext().startActivity(intent);
             return super.onSingleTapConfirmed(e);
         }
