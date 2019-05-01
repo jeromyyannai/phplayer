@@ -23,7 +23,11 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
            <com.mancj.materialsearchbar.MaterialSearchBar
                style="@style/SearchBarStyle"
                app:mt_hint="Search..."
@@ -31,7 +35,6 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:padding="10dp"
-               android:visibility="gone"
                android:id="@+id/searchBar" />
 
            <android.support.v7.widget.RecyclerView
@@ -44,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-
+</LinearLayout>
 </com.az.pplayer.Base.PinchView>
 </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 

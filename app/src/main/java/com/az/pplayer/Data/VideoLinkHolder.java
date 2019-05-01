@@ -25,7 +25,7 @@ public static String GetDefaultUrl(String key){
         return null;
     String defaultVideoLink=null;
     for (VideoUrl item : videoItems) {
-        if (item.Quality == "480")
+        if (item.Quality.equals("480"))
             defaultVideoLink = item.Link;
         break;
     }

@@ -148,7 +148,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                                 VideoUrl _url =new VideoUrl(url,
                                         urlPart.substring(urlPart.indexOf("quality")+10,urlPart.indexOf("quality")+14).replace("\"","")
                                 );
-                                if (_url.Quality =="480")
+                                if (_url.Quality.equals("480"))
                                     defaultUrl = _url.Link;
                                 if (defaultUrl.length()==0)
                                     defaultUrl = _url.Link;
