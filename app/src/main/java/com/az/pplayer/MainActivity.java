@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
 
         Video = new ArrayList<>();
         if (DataHolder.Size(catUrl)==0) {
-            LoadSite(DataHolder.Get(catUrl).FullUrl());
+            LoadSite(DataHolder.Get(catUrl).FullUrl(),SwipyRefreshLayoutDirection.BOTH);
         } else {
             ShowVideos(catUrl);
         }
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 if (result)
-                    LoadSite(DataHolder.Get(catUrl).FullUrl());
+                    LoadSite(DataHolder.Get(catUrl).FullUrl(),direction);
                 else
                     mSwipyRefreshLayout.setRefreshing(false);
 
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    void LoadSite(final String  catUrl){
+    void LoadSite(final String  catUrl, final SwipyRefreshLayoutDirection direction){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -139,8 +139,24 @@ public class MainActivity extends AppCompatActivity
                     public void run() {
                         mSwipyRefreshLayout.setRefreshing(false);
                         //imageView = (ImageView) findViewById(R.id.imageView);
+                        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+                           // pView.scrollTo(0, pView.getBottom());
+
+                            pView.post(new Runnable() {
+                                public void run() {
+                                    pView.fullScroll(pView.FOCUS_UP);
+                                }
+                            });
+                        }
+                        else if (direction == SwipyRefreshLayoutDirection.TOP) {
+                           // pView.scrollTo(pView.getBottom(), );
+                            pView.post(new Runnable() {
+                                public void run() {
+                                    pView.fullScroll(pView.FOCUS_DOWN);
+                                }
+                            });
+                        }
                         ShowVideos(catUrl);
-                        recyclerView.getLayoutManager().scrollToPosition(0);
 
                     }
                 });
@@ -168,6 +184,7 @@ public class MainActivity extends AppCompatActivity
         pView = findViewById(R.id.nsView);
         mScaleGestureDetector = new ScaleGestureDetector(this, new MainActivity.ScaleListener());
         pView.setOnTouchListener(this);
+
     }
 
     @Override

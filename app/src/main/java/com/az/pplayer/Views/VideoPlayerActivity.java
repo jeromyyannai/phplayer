@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -37,9 +38,14 @@ import com.az.pplayer.Data.ExoPlayerVideoHandler;
 import com.az.pplayer.Data.VideoLinkHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
 import com.az.pplayer.MainActivity;
+import com.az.pplayer.Models.CategoryItem;
+import com.az.pplayer.Models.CategoryStorageItem;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Models.VideoUrl;
+import com.az.pplayer.Models.VideoUrlBind;
 import com.az.pplayer.R;
+import com.az.pplayer.Services.DownloadRequest;
+import com.az.pplayer.Services.DownloadService;
 import com.az.pplayer.Storage.UserStorage;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -51,14 +57,26 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.tonyodev.fetch2.Error;
+import com.tonyodev.fetch2.Fetch;
+import com.tonyodev.fetch2.FetchConfiguration;
+import com.tonyodev.fetch2.NetworkType;
+import com.tonyodev.fetch2.Priority;
+import com.tonyodev.fetch2.Request;
+import com.tonyodev.fetch2core.Func;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +85,7 @@ import java.util.List;
  * status bar and navigation/system bar) with user interaction.
  */
 public class VideoPlayerActivity extends AppCompatActivity {
-    private String mVideoUrl = "";
+    private VideoItem mVideoUrl;
     public static final String INTENT_EXTRA_VIDEO_URL = "VIDEO_URL";
 
     private SimpleExoPlayerView mSimpleExoPlayerView;
@@ -80,13 +98,17 @@ public class VideoPlayerActivity extends AppCompatActivity {
     VisibleView visibleView;
 
     private boolean shouldDestroyVideo = true;
+
+    private String[] Tags;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         Intent intent = getIntent();
 
-        mVideoUrl= intent.getStringExtra("url");
+
+        mVideoUrl = new Gson().fromJson(intent.getStringExtra("url"), VideoItem.class);
         mSwipyRefreshLayout = findViewById(R.id.swipyrefreshlayout);
         mSimpleExoPlayerView = findViewById(R.id.player_view);
         setupDrawer();
@@ -107,6 +129,11 @@ public class VideoPlayerActivity extends AppCompatActivity {
                         ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
                         mSimpleExoPlayerView.setVisibility(View.GONE);
                         mSwipyRefreshLayout.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.nav_download:
+                        DownloadService.Get().Download(new DownloadRequest(VideoLinkHolder.GetDownloadUrl(mVideoUrl.Video),
+                                mVideoUrl.Title,Tags,mVideoUrl.Image,mVideoUrl.Preview));
+                        break;
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
                 drawer.closeDrawer(Gravity.LEFT);
@@ -116,10 +143,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
         });
     }
 
+
+
     void LoadVideo(){
-        String videoUrl = VideoLinkHolder.GetDefaultUrl(mVideoUrl);
+        String videoUrl = VideoLinkHolder.GetDefaultUrl(mVideoUrl.Video);
         if (videoUrl==null)
-            LoadSite(mVideoUrl);
+            LoadSite(mVideoUrl.Video);
         else
             initializePlayer(videoUrl);
     }
@@ -131,46 +160,57 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void run() {
                 String defaultUrl ="";
 
-                try {
-                    Document doc = Jsoup.connect("https://pornhub.com"+_url).get();
-                    Element script = doc.select("#player").select("script").first();
+    try {
+        Document doc = Jsoup.connect("https://pornhub.com" + _url).timeout(0).get();
+        Element script = doc.select("#player").select("script").first();
+        Elements categories = doc.select(".video-detailed-info .categoriesWrapper a");
+        List<String> tagList = new ArrayList<>();
+        for (int i=0;i<categories.size()-1;i++){
+            if (categories.get(i).text() != null &&categories.get(i).text().length()>0 && categories.get(i).text().substring(0,1) != "+")
+            tagList.add( categories.get(i).text());
+        }
+        Tags = tagList.toArray(new String[0]);
+        String rawHtml = script.html().substring(0, 6553);
+        String videoDataPart = rawHtml.substring(rawHtml.indexOf("mediaDefinitions")+18);
+        String videoData = videoDataPart.substring(0,videoDataPart.indexOf("}]")+2);
+        Type listType = new TypeToken<ArrayList<VideoUrlBind>>(){}.getType();
+        List<VideoUrlBind> videoUrls = new Gson().fromJson(videoData,listType);
+        //String[] urlParts = rawHtml.substring(rawHtml.indexOf("videoUrl")).split("videoUrl");
 
-                    String rawHtml = script.html().substring(0,6553);
-                    String[] urlParts = rawHtml.substring(rawHtml.indexOf("videoUrl")).split("videoUrl");
-                    List<VideoUrl> urls = new ArrayList<>();
+        List<VideoUrl> urls = new ArrayList<>();
 
-                    for (String urlPart : urlParts)
-                    {
-                        try {
-                            String url = urlPart.substring(0, urlPart.indexOf(","))
-                                    .replace("\":\"","").replace("\"}","").replace("\\","").replace("]","");
-                            if (url.length() > 2) {
-                                VideoUrl _url =new VideoUrl(url,
-                                        urlPart.substring(urlPart.indexOf("quality")+10,urlPart.indexOf("quality")+14).replace("\"","")
-                                );
-                                if (_url.Quality.equals("480"))
-                                    defaultUrl = _url.Link;
-                                if (defaultUrl.length()==0)
-                                    defaultUrl = _url.Link;
-                                urls.add(_url);
+        for (VideoUrlBind urlPart : videoUrls) {
+            try {
+//                String url = urlPart.substring(0, urlPart.indexOf(","))
+//                        .replace("\":\"", "").replace("\"}", "").replace("\\", "").replace("]", "");
+//                if (url.length() > 2) {
+//                    VideoUrl _url = new VideoUrl(url,
+//                            urlPart.substring(urlPart.indexOf("quality") + 10, urlPart.indexOf("quality") + 14).replace("\"", "")
+//                    );
+                if (urlPart.videoUrl == "")
+                    continue;
+                    VideoUrl _url = new VideoUrl(urlPart.videoUrl, urlPart.quality.toString());
+                    if (_url.Quality.equals("480"))
+                        defaultUrl = _url.Link;
+                    if (defaultUrl.length() == 0)
+                        defaultUrl = _url.Link;
+                    urls.add(_url);
 
-                            }
-                        } catch (Exception ex)
-                        {
 
-                        }
+            } catch (Exception ex) {
 
-                    }
-                    VideoLinkHolder.Save(mVideoUrl,urls);
-                    DataHolder.Save(mVideoUrl,VideoLinksSource.ParseLinks(doc));
+            }
 
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
+        }
+        VideoLinkHolder.Save(mVideoUrl.Video, urls);
+        DataHolder.Save(mVideoUrl.Video, VideoLinksSource.ParseLinks(doc));
 
-                    final String finalDefaultUrl = VideoLinkHolder.GetDefaultUrl(mVideoUrl);
-                if (finalDefaultUrl.length()>0) {
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+                    final String finalDefaultUrl = VideoLinkHolder.GetDefaultUrl(mVideoUrl.Video);
+                if (finalDefaultUrl != null && finalDefaultUrl.length()>0) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -178,7 +218,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                             initializePlayer(finalDefaultUrl);
                             //mSwipyRefreshLayout.setRefreshing(false);
                             //imageView = (ImageView) findViewById(R.id.imageView);
-                            ShowVideos(mVideoUrl);
+                            ShowVideos(mVideoUrl.Video);
                         }
                     });
                 }
@@ -237,7 +277,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LoadVideo();
+       // LoadVideo();
     }
 
     @Override

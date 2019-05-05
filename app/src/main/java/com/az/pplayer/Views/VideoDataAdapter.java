@@ -29,6 +29,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestFutureTarget;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,8 @@ public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.Vie
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Intent intent = new Intent(v.view.getContext(),VideoPlayerActivity.class);
-            intent.putExtra("url", v.item.Video);
+            intent.putExtra("url",new Gson().toJson(v.item));
+
             v.view.getContext().startActivity(intent);
             return super.onDoubleTap(e);
         }

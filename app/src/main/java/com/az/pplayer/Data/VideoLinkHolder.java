@@ -25,13 +25,33 @@ public static String GetDefaultUrl(String key){
         return null;
     String defaultVideoLink=null;
     for (VideoUrl item : videoItems) {
-        if (item.Quality.equals("480"))
+        if (item.Quality.equals("480")) {
             defaultVideoLink = item.Link;
-        break;
+            break;
+        }
     }
     if (defaultVideoLink ==null && videoItems.size()>0)
         defaultVideoLink = videoItems.get(0).Link;
     return defaultVideoLink;
+
+
+    }
+
+    public static String GetDownloadUrl(String key){
+        List<VideoUrl> videoItems = Get(key);
+        if (videoItems == null)
+            return null;
+        String defaultVideoLink=null;
+        for (VideoUrl item : videoItems) {
+            if (item.Quality.equals("720")) {
+                defaultVideoLink = item.Link;
+                break;
+            }
+        }
+        if (defaultVideoLink == null)
+            return  GetDefaultUrl(key);
+
+        return defaultVideoLink;
 
 
     }
