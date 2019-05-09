@@ -4,15 +4,15 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.support.v4.app.NotificationManagerCompat;
+import android.widget.Toast;
 
-import com.az.pplayer.Data.VideoLinkHolder;
+import com.az.pplayer.Features.Downloads.LocalVideoItem;
 import com.az.pplayer.MainActivity;
+import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.PhpPlayerApp;
 import com.az.pplayer.R;
 import com.az.pplayer.Storage.UserStorage;
-import com.az.pplayer.Views.VideoPlayerActivity;
 import com.tonyodev.fetch2.AbstractFetchListener;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Error;
@@ -41,42 +41,58 @@ public class DownloadService {
 
     private Context context;
     Fetch fetch;
-    private List<DownloadRequest> uncompletedRequests;
+
 
     private DownloadService(Context context) {
         this.context = context;
         FetchConfiguration fetchConfiguration = new FetchConfiguration.Builder(context)
                 .setDownloadConcurrentLimit(3)
                 .build();
-        uncompletedRequests = new ArrayList<>();
          fetch = Fetch.Impl.getInstance(fetchConfiguration);
 
         fetch.addListener(fetchListener);
     }
 
+    public void addFetchListener(FetchListener listener){
+        fetch.addListener(listener);
+    }
+
+    public void Download(final VideoItem item){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DownloadRequest request = ParserService.ParseVideoPage(item);
+                if (request != null){
+                    Download(request);
+                }
+            }
+            }).start();
+    }
     public void Download(final DownloadRequest request){
 
 
 
-        File file = new File (UserStorage.Get().getDownloadPath(), PathService.GetVideoLocalPath(request.Url));
+        File file = new File (PathService.GetVideoLocalPath(request.Url));
         if (file.exists ()) file.delete ();
-        request.VideoItem = new LocalVideoItem(request);
+        final LocalVideoItem videoItem = new LocalVideoItem(request);
 
 
 
         final Request downloadRequest = new Request(request.Url, file.getPath());
-        downloadRequest.setPriority(Priority.NORMAL);
+        downloadRequest.setPriority(Priority.HIGH);
         downloadRequest.setNetworkType(NetworkType.WIFI_ONLY);
 
         fetch.enqueue(downloadRequest, new Func<Request>() {
             @Override
             public void call(@NotNull Request result) {
-                uncompletedRequests.add(request);
+                request.Id = result.getId();
+                UserStorage.Get().AddDownloadRequest(request);
+                UserStorage.Get().AddDownloadedVideo(videoItem);
             }
         }, new Func<Error>() {
             @Override
             public void call(@NotNull Error result) {
-
+                Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
         querySupportItem(request.ImageUrl);
@@ -106,47 +122,6 @@ public class DownloadService {
         });
     }
 
-    private void DownloadCompleted(DownloadRequest request)
-    {
-        if (request == null)
-            return;
-        UserStorage.Get().AddDownloadedVideo(request.VideoItem);
-     //download all stuff from request
-        removeRequest(request);
-
-    }
-
-    private boolean removeRequest(DownloadRequest request){
-        for (int i=0;i<uncompletedRequests.size();i++)
-        {
-            if (uncompletedRequests.get(i).Url.equals(request.Url)) {
-                uncompletedRequests.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean removeRequest(String url){
-        for (int i=0;i<uncompletedRequests.size();i++)
-        {
-            if (uncompletedRequests.get(i).Url.equals(url)) {
-                uncompletedRequests.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private  DownloadRequest getRequest(String url){
-        for (int i=0;i<uncompletedRequests.size();i++)
-        {
-            if (uncompletedRequests.get(i).Url.equals(url)) {
-                return uncompletedRequests.get(i);
-
-            }
-        }
-        return null;
-    }
 
 
     private FetchListener fetchListener = new AbstractFetchListener() {
@@ -154,37 +129,39 @@ public class DownloadService {
 
         @Override
         public void onError(@NotNull Download download, @NotNull Error error, @Nullable Throwable throwable) {
-            removeRequest(download.getUrl());
+            UserStorage.Get().RemoveDownloadRequest(download.getId());
             super.onError(download, error, throwable);
         }
 
         @Override
         public void onCompleted(@NotNull Download download) {
             super.onCompleted(download);
-            DownloadCompleted(getRequest(download.getUrl()));
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            DownloadRequest request = UserStorage.Get().GetRequest(download.getId());
+            if (request == null)
+                return;
+            notificationManager.cancel(request.Id);
+            UserStorage.Get().RemoveDownloadRequest(download.getId());
+
         }
 
         @Override
         public void onProgress(@NotNull Download download, long etaInMilliSeconds, long downloadedBytesPerSecond) {
             super.onProgress(download, etaInMilliSeconds, downloadedBytesPerSecond);
-            DownloadRequest request = getRequest(download.getUrl());
+            DownloadRequest request = UserStorage.Get().GetRequest(download.getId());
             if (request == null)
                 return;
-            int id = uncompletedRequests.indexOf(request);
-            int percent = (int)(download.getTotal()/download.getDownloaded());
-            Intent notificationIntent = new Intent(context, MainActivity.class); //replace with downloads
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+            int id = request.Id;
+            int percent =0;
+            if (download.getTotal() != 0) {
+                 percent = (int) (download.getDownloaded() * 100 / download.getTotal());
+            }
 
-            Notification notification = new Notification.Builder(context)
-                    .setContentTitle(download.getFile())
-                    .setContentText( percent+ "%")
-                    .setSmallIcon(R.drawable.ic_file_download)
-                    .setContentIntent(pendingIntent)
-                    .build();
+        }
 
-            /* Startujemy na pierwszym planie, aby nie dało jej się zamknąć */
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(id, notification);
+        private CharSequence getFileName(String file) {
+           String[] parts= file.split("/");
+           return parts[parts.length-1];
         }
     };
 }

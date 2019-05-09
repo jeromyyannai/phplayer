@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.az.pplayer.Data.CategoryHolder;
+import com.az.pplayer.Features.Downloads.DownloadsActivity;
 import com.az.pplayer.MainActivity;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.MenuItem;
@@ -52,6 +53,10 @@ public class LeftMenu implements IMenuItemClick{
             case "ic_search":
                  context.startActivity(new Intent(context, SearchActivity.class));
                 break;
+            case "ic_downloads":
+                context.startActivity(new Intent(context, DownloadsActivity.class));
+                break;
+
         }
     }
 

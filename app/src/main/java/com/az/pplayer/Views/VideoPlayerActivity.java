@@ -1,5 +1,6 @@
 package com.az.pplayer.Views;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,6 +48,7 @@ import com.az.pplayer.Models.VideoUrlBind;
 import com.az.pplayer.R;
 import com.az.pplayer.Services.DownloadRequest;
 import com.az.pplayer.Services.DownloadService;
+import com.az.pplayer.Services.ParserService;
 import com.az.pplayer.Storage.UserStorage;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -96,6 +99,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SwipyRefreshLayout mSwipyRefreshLayout;
     VisibleView visibleView;
+    DownloadRequest request;
 
     private boolean shouldDestroyVideo = true;
 
@@ -131,8 +135,11 @@ public class VideoPlayerActivity extends AppCompatActivity {
                         mSwipyRefreshLayout.setVisibility(View.VISIBLE);
                         break;
                     case R.id.nav_download:
-                        DownloadService.Get().Download(new DownloadRequest(VideoLinkHolder.GetDownloadUrl(mVideoUrl.Video),
-                                mVideoUrl.Title,Tags,mVideoUrl.Image,mVideoUrl.Preview));
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 200);
+//                        }
+                        if (request != null)
+                        DownloadService.Get().Download(request);
                         break;
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
@@ -158,57 +165,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String defaultUrl ="";
-
-    try {
-        Document doc = Jsoup.connect("https://pornhub.com" + _url).timeout(0).get();
-        Element script = doc.select("#player").select("script").first();
-        Elements categories = doc.select(".video-detailed-info .categoriesWrapper a");
-        List<String> tagList = new ArrayList<>();
-        for (int i=0;i<categories.size()-1;i++){
-            if (categories.get(i).text() != null &&categories.get(i).text().length()>0 && categories.get(i).text().substring(0,1) != "+")
-            tagList.add( categories.get(i).text());
-        }
-        Tags = tagList.toArray(new String[0]);
-        String rawHtml = script.html().substring(0, 6553);
-        String videoDataPart = rawHtml.substring(rawHtml.indexOf("mediaDefinitions")+18);
-        String videoData = videoDataPart.substring(0,videoDataPart.indexOf("}]")+2);
-        Type listType = new TypeToken<ArrayList<VideoUrlBind>>(){}.getType();
-        List<VideoUrlBind> videoUrls = new Gson().fromJson(videoData,listType);
-        //String[] urlParts = rawHtml.substring(rawHtml.indexOf("videoUrl")).split("videoUrl");
-
-        List<VideoUrl> urls = new ArrayList<>();
-
-        for (VideoUrlBind urlPart : videoUrls) {
-            try {
-//                String url = urlPart.substring(0, urlPart.indexOf(","))
-//                        .replace("\":\"", "").replace("\"}", "").replace("\\", "").replace("]", "");
-//                if (url.length() > 2) {
-//                    VideoUrl _url = new VideoUrl(url,
-//                            urlPart.substring(urlPart.indexOf("quality") + 10, urlPart.indexOf("quality") + 14).replace("\"", "")
-//                    );
-                if (urlPart.videoUrl == "")
-                    continue;
-                    VideoUrl _url = new VideoUrl(urlPart.videoUrl, urlPart.quality.toString());
-                    if (_url.Quality.equals("480"))
-                        defaultUrl = _url.Link;
-                    if (defaultUrl.length() == 0)
-                        defaultUrl = _url.Link;
-                    urls.add(_url);
-
-
-            } catch (Exception ex) {
-
-            }
-
-        }
-        VideoLinkHolder.Save(mVideoUrl.Video, urls);
-        DataHolder.Save(mVideoUrl.Video, VideoLinksSource.ParseLinks(doc));
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-
+         request = ParserService.ParseVideoPage(mVideoUrl);
                     final String finalDefaultUrl = VideoLinkHolder.GetDefaultUrl(mVideoUrl.Video);
                 if (finalDefaultUrl != null && finalDefaultUrl.length()>0) {
                     runOnUiThread(new Runnable() {

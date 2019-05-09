@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 
-import com.az.pplayer.DataSource.CategorySource;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.CategoryStorageItem;
 import com.az.pplayer.PhpPlayerApp;
-import com.az.pplayer.Services.LocalVideoItem;
+import com.az.pplayer.Features.Downloads.LocalVideoItem;
+import com.az.pplayer.Services.DownloadRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,6 +42,10 @@ public class UserStorage {
         Type listType2 = new TypeToken<ArrayList<LocalVideoItem>>(){}.getType();
         DownloadedItems = new Gson().fromJson(DownloadedItemsstr, listType2);
 
+        String downloadRequestsstr = preferences.getString("downloadRequests","");
+        Type listType3 = new TypeToken<ArrayList<DownloadRequest>>(){}.getType();
+        downloadRequests = new Gson().fromJson(downloadRequestsstr, listType3);
+
         if (java.util.Arrays.asList(resolutions).indexOf(resolution) ==-1)
             resolution = "480";
         columns = Math.max(preferences.getInt("columns",3),1);
@@ -61,15 +65,18 @@ public class UserStorage {
     }
 
     private List<LocalVideoItem> DownloadedItems;
+    private List<DownloadRequest> downloadRequests;
 
     public String getDownloadPath(){
         String root = Environment.getExternalStorageDirectory().toString();
+        //String root="";
         File myDir = new File(root + "/php_videos");
         myDir.mkdirs();
         return myDir.getPath();
     }
     public String getDownloadDataPath(){
         String root = Environment.getExternalStorageDirectory().toString();
+        //String root=Context;
         File myDir = new File(root + "/php_videos/data");
         myDir.mkdirs();
         return myDir.getPath();
@@ -110,7 +117,21 @@ public class UserStorage {
     public List<LocalVideoItem> GetDownloadedVideoList(){
         if (DownloadedItems == null)
             DownloadedItems = new ArrayList<>();
+        List<DownloadRequest> requests = GetDownloadRequests();
+        for (LocalVideoItem item : DownloadedItems){
+            if (item.Request != null) {
+                DownloadRequest request = GetRequest(item.Request.Id);
+                if (request != null)
+                    item.IsDownloaded = false;
+
+            }
+        }
         return DownloadedItems;
+    }
+    public List<DownloadRequest> GetDownloadRequests(){
+        if (downloadRequests == null)
+            downloadRequests = new ArrayList<>();
+        return downloadRequests;
     }
 
     public void AddDownloadedVideo(LocalVideoItem item){
@@ -121,9 +142,19 @@ public class UserStorage {
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("DownloadedItems", new Gson().toJson(DownloadedItems));
-        editor.commit();
+        editor.apply();
     }
 
+    public void AddDownloadRequest(DownloadRequest item){
+        if (downloadRequests == null)
+            downloadRequests = new ArrayList<>();
+        downloadRequests.add(item);
+
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("downloadRequests", new Gson().toJson(downloadRequests));
+        editor.apply();
+    }
     public void RemoveDownloadedVideo(LocalVideoItem item){
         for (int i=0;i<DownloadedItems.size();i++){
             if (item.VideoPath.equals(DownloadedItems.get(i).VideoPath)){
@@ -131,6 +162,28 @@ public class UserStorage {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("DownloadedItems", new Gson().toJson(DownloadedItems));
                 editor.commit();
+                return;
+            }
+        }
+    }
+
+
+    public DownloadRequest GetRequest(int id){
+        for (int i=0;i<downloadRequests.size();i++){
+            if (id ==downloadRequests.get(i).Id){
+                return  downloadRequests.get(i);
+            }
+        }
+        return null;
+    }
+
+    public void RemoveDownloadRequest(int id){
+        for (int i=0;i<downloadRequests.size();i++){
+            if (id ==downloadRequests.get(i).Id){
+                downloadRequests.remove(i);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("downloadRequests", new Gson().toJson(downloadRequests));
+                editor.apply();
                 return;
             }
         }

@@ -65,7 +65,8 @@ public class SearchActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
+        menu = new LeftMenu(this);
+        menu.SetSelected("ic_search");
 
         setupPinch();
 
@@ -110,7 +111,7 @@ public class SearchActivity extends AppCompatActivity
         if (searchPattern !=null){
 
             if (DataHolder.Size(prepareUrl())==0) {
-                LoadSite(DataHolder.Get(prepareUrl()).FullUrl());
+                LoadSite(DataHolder.Get(prepareUrl()).FullUrl(),SwipyRefreshLayoutDirection.BOTH);
             } else {
                 ShowVideos(prepareUrl());
             }
@@ -141,7 +142,7 @@ public class SearchActivity extends AppCompatActivity
 
     }
 
-    void LoadSite(final String  catUrl){
+    void LoadSite(final String  catUrl, final SwipyRefreshLayoutDirection direction){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -152,8 +153,25 @@ public class SearchActivity extends AppCompatActivity
                     public void run() {
                         mSwipyRefreshLayout.setRefreshing(false);
                         //imageView = (ImageView) findViewById(R.id.imageView);
+                        if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+                            // pView.scrollTo(0, pView.getBottom());
+
+                            pView.post(new Runnable() {
+                                public void run() {
+                                    pView.fullScroll(pView.FOCUS_UP);
+                                }
+                            });
+                        }
+                        else if (direction == SwipyRefreshLayoutDirection.TOP) {
+                            // pView.scrollTo(pView.getBottom(), );
+                            pView.post(new Runnable() {
+                                public void run() {
+                                    pView.fullScroll(pView.FOCUS_DOWN);
+                                }
+                            });
+                        }
                         ShowVideos(catUrl);
-                        recyclerView.getLayoutManager().scrollToPosition(0);
+
                     }
                 });
             }
@@ -221,7 +239,7 @@ public class SearchActivity extends AppCompatActivity
         }
 
         if (result) {
-            LoadSite(DataHolder.Get(prepareUrl()).FullUrl());
+            LoadSite(DataHolder.Get(prepareUrl()).FullUrl(),direction);
         }
         else
             mSwipyRefreshLayout.setRefreshing(false);

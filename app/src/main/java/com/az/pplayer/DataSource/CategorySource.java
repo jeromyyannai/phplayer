@@ -18,7 +18,7 @@ public class CategorySource {
         List<CategoryItem> cateories = new ArrayList<>();
         try {
 
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).timeout(0).get();
             Elements as = doc.select("li.cat_pic>div>a");
 
             for (Element el: as)
