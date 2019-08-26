@@ -1,1 +1,1 @@
-include ':app', ':swipelib', ':swipelib1'
+include ':app', ':swipelib'
