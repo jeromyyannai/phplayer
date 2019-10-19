@@ -1,16 +1,19 @@
 package com.az.pplayer.Models;
 
 public class VideoUrlBind {
-    public boolean defaultQuality;
-    public String format;
-    public Object quality;
 
-    public VideoUrlBind(boolean defaultQuality, String format, Object quality, String videoUrl) {
-        this.defaultQuality = defaultQuality;
-        this.format = format;
-        this.quality = quality;
-        this.videoUrl = videoUrl;
+    public String id;
+    public String text;
+    public String url;
+    public float upgrade;
+    public float active;
+
+
+    public VideoUrlBind(String id, String text, String url, float upgrade, float active) {
+        this.id = id;
+        this.text = text;
+        this.url = url;
+        this.upgrade = upgrade;
+        this.active = active;
     }
-
-    public String videoUrl;
 }
