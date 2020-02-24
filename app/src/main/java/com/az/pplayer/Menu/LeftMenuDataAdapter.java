@@ -2,8 +2,7 @@ package com.az.pplayer.Menu;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +21,9 @@ import com.az.pplayer.R;
 import com.az.pplayer.Views.VideoDataAdapter;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class LeftMenuDataAdapter extends RecyclerView.Adapter<LeftMenuDataAdapter.MenuViewHolder>  {
 

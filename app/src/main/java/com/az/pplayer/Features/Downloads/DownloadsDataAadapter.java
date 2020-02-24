@@ -9,8 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -45,6 +44,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAadapter.ViewHolder> {
     private List<LocalVideoItem> videoItems;

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -25,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapter.ViewHolder> {
     private List<CategoryItem> categories;

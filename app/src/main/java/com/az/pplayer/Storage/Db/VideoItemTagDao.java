@@ -1,8 +1,9 @@
 package com.az.pplayer.Storage.Db;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.Relation;
 
 @Entity
 public class VideoItemTagDao {

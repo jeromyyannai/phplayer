@@ -10,8 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -40,6 +39,9 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.ViewHolder> {
     private List<VideoItem> videoItems;

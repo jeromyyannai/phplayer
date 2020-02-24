@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static android.support.v4.print.PrintHelper.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 public class UserStorage {
     private static  UserStorage ourInstance;;

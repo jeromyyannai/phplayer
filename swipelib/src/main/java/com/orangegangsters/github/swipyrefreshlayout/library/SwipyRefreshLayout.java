@@ -20,8 +20,7 @@ package com.orangegangsters.github.swipyrefreshlayout.library;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
+
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -34,6 +33,9 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
+
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewCompat;
 
 /**
  * The SwipeRefreshLayout should be used whenever the user can refresh the

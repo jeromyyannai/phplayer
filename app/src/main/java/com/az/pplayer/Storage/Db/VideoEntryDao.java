@@ -1,9 +1,11 @@
 package com.az.pplayer.Storage.Db;
 
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Relation;
+
 
 import java.util.List;
+
+import androidx.room.Embedded;
+import androidx.room.Relation;
 
 public class VideoEntryDao {
     @Embedded

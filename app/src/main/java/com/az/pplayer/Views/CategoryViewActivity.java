@@ -1,13 +1,7 @@
 package com.az.pplayer.Views;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,9 +22,15 @@ import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.R;
 import com.az.pplayer.Storage.UserStorage;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CategoryViewActivity  extends AppCompatActivity implements PinchView.IOnTouchListener {
     List<CategoryItem> Categories;

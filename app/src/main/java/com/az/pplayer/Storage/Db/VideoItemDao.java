@@ -1,10 +1,12 @@
 package com.az.pplayer.Storage.Db;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
+
 
 import com.az.pplayer.Services.DownloadRequest;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 @Entity
 public class VideoItemDao {
     @PrimaryKey

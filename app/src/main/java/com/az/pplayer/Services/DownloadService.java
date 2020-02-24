@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
 import com.az.pplayer.Features.Downloads.LocalVideoItem;
@@ -30,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.core.app.NotificationManagerCompat;
 
 public class DownloadService {
     private static DownloadService instance;
