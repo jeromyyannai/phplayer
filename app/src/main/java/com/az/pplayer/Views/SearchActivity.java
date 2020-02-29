@@ -138,7 +138,7 @@ public class SearchActivity extends AppCompatActivity
     String prepareUrl(){
         if (searchPattern==null || searchPattern=="")
             return Url.MainUrl;
-        return Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+"&o=mr";
+        return Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+"&o="+UserStorage.Get().getSearchOrder();
 
 
 

@@ -1,5 +1,6 @@
 package com.az.pplayer.Views;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
@@ -8,6 +9,7 @@ import android.widget.EditText;
 import com.az.pplayer.Models.Storage;
 import com.az.pplayer.R;
 import com.az.pplayer.Services.StorageService;
+import com.az.pplayer.Storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +92,8 @@ public class SettingsActivity extends AppCompatActivity implements
         return true;
     }
 
+
+
     public static class HeaderFragment extends PreferenceFragmentCompat {
 
         @Override
@@ -135,7 +139,19 @@ public class SettingsActivity extends AppCompatActivity implements
                                 editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                             }
                         });
+                preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (newValue.equals(""))
+                            return false;
+                        UserStorage.Get().HashPassword(newValue.toString());
+                         return false;
+                    }
+                });
+
             }
         }
+
+
     }
 }

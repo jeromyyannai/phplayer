@@ -13,18 +13,25 @@
         android:roundIcon="@drawable/play"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity
             android:name=".Views.SettingsActivity"
-            android:theme="@style/SettingsTheme"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings"
+            android:theme="@style/SettingsTheme" />
+        <activity
+            android:name=".Views.StartActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:excludeFromRecents="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".Views.CategoryViewActivity"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Views.VideoPlayerActivity"

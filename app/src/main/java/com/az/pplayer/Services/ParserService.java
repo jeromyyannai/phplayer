@@ -8,6 +8,7 @@ import com.az.pplayer.DataSource.VideoLinksSource;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Models.VideoUrl;
 import com.az.pplayer.Models.VideoUrlBind;
+import com.az.pplayer.Storage.UserStorage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.duktape.Duktape;
@@ -71,7 +72,7 @@ public class ParserService {
                     if (urlPart.url == "")
                         continue;
                     VideoUrl _url = new VideoUrl(urlPart.url, urlPart.text.toString());
-                    if (_url.Quality.equals("480"))
+                    if (_url.Quality.equals(UserStorage.Get().getDownloadResolution()))
                         defaultUrl = _url.Link;
                     if (defaultUrl.length() == 0)
                         defaultUrl = _url.Link;

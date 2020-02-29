@@ -3,6 +3,7 @@ package com.az.pplayer.Storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.CategoryStorageItem;
@@ -14,6 +15,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 public class UserStorage {
     private static  UserStorage ourInstance;;
@@ -32,9 +36,8 @@ public class UserStorage {
     }
     SharedPreferences preferences;
     private UserStorage(Context context) {
-        preferences = context.getSharedPreferences("phplayer", MODE_PRIVATE);
-        resolution = preferences.getString("resolution","480");
-       String rescentCatsstr = preferences.getString("rescentCats","");
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String rescentCatsstr = preferences.getString("rescentCats","");
         Type listType = new TypeToken<ArrayList<CategoryStorageItem>>(){}.getType();
         rescentCats = new Gson().fromJson(rescentCatsstr, listType);
 
@@ -46,38 +49,50 @@ public class UserStorage {
         Type listType3 = new TypeToken<ArrayList<DownloadRequest>>(){}.getType();
         downloadRequests = new Gson().fromJson(downloadRequestsstr, listType3);
 
+        UpdateConfiguration(context);
+    }
+
+    public void UpdateConfiguration(Context context) {
+       resolution = preferences.getString("video_resolution","480");
+
         if (java.util.Arrays.asList(resolutions).indexOf(resolution) ==-1)
             resolution = "480";
-        columns = Math.max(preferences.getInt("columns",3),1);
-        fontSize = preferences.getInt("fontSize",10);
+        columns = Math.max(Integer.parseInt(preferences.getString("columns_count","3")),1);
+        fontSize = Integer.parseInt(preferences.getString("font_size","10"));
         if (fontSize ==0)
             fontSize = 10;
+        PasswordProtection = preferences.getBoolean("pass_enabled",true);
+        downloadPath = preferences.getString("storage",Environment.getExternalStorageDirectory().getAbsolutePath());
+        SearchMode = preferences.getString("search_mode","most_rescent");
+        downloadResolution = preferences.getString("download_resolution","720");
+        HashedPassword = preferences.getString("signature","9f6992966d4c363ea0162a056cb45fe5");
     }
 
     private String resolution = "480";
+    private String downloadResolution="720";
     private String[] resolutions ={"240","480","720","1080"};
     private List<CategoryStorageItem> rescentCats;
     private int maxRescentcats = 7;
     private int columns=3;
     private int fontSize = 10;
+    private boolean PasswordProtection = true;
+    private String downloadPath;
+    public String SearchMode;
     public String getResolution(){
         return  resolution;
     }
 
     private List<LocalVideoItem> DownloadedItems;
     private List<DownloadRequest> downloadRequests;
+    private  String HashedPassword;
 
     public String getDownloadPath(){
-        String root = Environment.getExternalStorageDirectory().toString();
-        //String root="";
-        File myDir = new File(root + "/php_videos");
+        File myDir = new File(downloadPath + "/.php_videos");
         myDir.mkdirs();
         return myDir.getPath();
     }
     public String getDownloadDataPath(){
-        String root = Environment.getExternalStorageDirectory().toString();
-        //String root=Context;
-        File myDir = new File(root + "/php_videos/data");
+        File myDir = new File(downloadPath + "/.php_videos/data");
         myDir.mkdirs();
         return myDir.getPath();
     }
@@ -190,7 +205,7 @@ public class UserStorage {
     }
 
     public int getColumns() {
-        if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+        if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT)
                 return columns-2>0?columns-2:1;
         return columns>0?columns:1;
     }
@@ -200,7 +215,7 @@ public class UserStorage {
             return;
 
         this.columns = columns;
-        if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+        if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT)
             columns+=2;
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("columns", columns);
@@ -216,5 +231,53 @@ public class UserStorage {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("fontSize", fontSize);
         editor.commit();
+    }
+
+    public boolean getPasswordProtected() {
+        return PasswordProtection;
+    }
+
+    public String getSearchOrder(){
+        switch (SearchMode){
+            case "most_rescent":
+                return "mr";
+                default:
+                    return "mr";
+
+        }
+
+    }
+
+    public String getDownloadResolution() {
+       return downloadResolution;
+    }
+
+    public boolean CheckPassword(String pwd){
+       return md5(pwd).equals(HashedPassword);
+
+    }
+    public  void HashPassword(String pwd){
+        String str=  md5(pwd);
+        preferences.edit().putString("signature",str).apply();
+
+
+    }
+    private String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
