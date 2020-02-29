@@ -3,7 +3,7 @@
     package="com.az.pplayer">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".PhpPlayerApp"
@@ -13,6 +13,10 @@
         android:roundIcon="@drawable/play"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".Views.SettingsActivity"
+            android:theme="@style/SettingsTheme"
+            android:label="@string/title_activity_settings"></activity>
         <activity
             android:name=".Views.CategoryViewActivity"
             android:theme="@style/AppTheme">
@@ -47,7 +51,6 @@
             android:label="@string/title_activity_video_player"
             android:screenOrientation="landscape"
             android:theme="@style/VideoPlayerTheme" />
-
     </application>
 
 </manifest>

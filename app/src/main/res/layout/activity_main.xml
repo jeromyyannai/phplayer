@@ -101,14 +101,15 @@
                         android:id="@+id/settings"
                         style="@style/MenuItemStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="60dp"
                         android:src="@drawable/ic_settings"></ImageView>
 
                     <ImageView
                         android:id="@+id/exit"
                         style="@style/MenuItemStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="10dp"
                         android:src="@drawable/ic_power"></ImageView>
                 </LinearLayout>
             </LinearLayout>

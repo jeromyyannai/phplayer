@@ -2,6 +2,7 @@ package com.az.pplayer.Menu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.View;
 
 
 import com.az.pplayer.Data.CategoryHolder;
@@ -14,6 +15,7 @@ import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.CategoryDataAdapter;
 import com.az.pplayer.Views.CategoryViewActivity;
 import com.az.pplayer.Views.SearchActivity;
+import com.az.pplayer.Views.SettingsActivity;
 import com.google.gson.Gson;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,7 +25,7 @@ public class LeftMenu implements IMenuItemClick{
     private Activity context;
     private RecyclerView recyclerView;
     LeftMenuDataAdapter dataAdapter;
-
+public static final int SETTINGS_CHANGED=99;
 
     public LeftMenu (Activity activity)
     {
@@ -34,6 +36,14 @@ public class LeftMenu implements IMenuItemClick{
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         recyclerView.setAdapter(dataAdapter);
+        context.findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context,SettingsActivity.class);
+                context.startActivityForResult(intent,SETTINGS_CHANGED);
+            }
+        });
+
     }
 
     @Override

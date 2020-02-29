@@ -6,4 +6,5 @@
     <color name="colorAccentBlack">#ff1b1b1b</color>
     <color name="black_overlay">#ff000000</color>
     <color name="orange">#ffff9f0f</color>
+    <color name="white">#ffc0c0c0</color>
 </resources>

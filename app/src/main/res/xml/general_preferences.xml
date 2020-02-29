@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright 2018 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ListPreference
+        app:defaultValue="3"
+        app:entries="@array/columns_count"
+        app:entryValues="@array/columns_count"
+        app:key="columns_count"
+        app:title="@string/columns_count"
+        app:useSimpleSummaryProvider="true" />
+    <ListPreference
+        app:defaultValue="3"
+        app:entries="@array/font_sizes"
+        app:entryValues="@array/font_sizes"
+        app:key="font_size"
+        app:title="@string/font_size"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        app:key="storage"
+        app:title="Download folder"
+        app:useSimpleSummaryProvider="true"/>
+    <ListPreference
+        app:defaultValue="most_rescent"
+        app:entries="@array/search_mode_values"
+        app:entryValues="@array/search_mode"
+        app:key="search_mode"
+        app:title="@string/search_mode"
+        app:useSimpleSummaryProvider="true" />
+    <ListPreference
+        app:defaultValue="480"
+        app:entries="@array/resolutions"
+        app:entryValues="@array/resolutions"
+        app:key="video_resolution"
+        app:title="@string/video_resolution"
+        app:useSimpleSummaryProvider="true" />
+    <ListPreference
+        app:defaultValue="720"
+        app:entries="@array/resolutions"
+        app:entryValues="@array/resolutions"
+        app:key="download_resolution"
+        app:title="@string/download_resolution"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>

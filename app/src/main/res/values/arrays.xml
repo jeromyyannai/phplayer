@@ -1,0 +1,43 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="font_sizes">
+        <item>"9"</item>
+        <item>"10"</item>
+        <item>"12"</item>
+        <item>"14"</item>
+        <item>"16"</item>
+    </string-array>
+    <string-array name="columns_count">
+        <item>"1"</item>
+        <item>"2"</item>
+        <item>"3"</item>
+        <item>"4"</item>
+        <item>"5"</item>
+        <item>"6"</item>
+    </string-array>
+    <string-array name="search_mode">
+        <item>"most_relevant"</item>
+        <item>"most_rescent"</item>
+        <item>"top_rated"</item>
+        <item>"most_viewed"</item>
+
+    </string-array>
+    <string-array name="search_mode_values">
+        <item>"Most relevant"</item>
+        <item>"Most rescent"</item>
+        <item>"Top rated"</item>
+        <item>"Most viewed"</item>
+
+    </string-array>
+    <string-array name="resolutions">
+        <item>"480"</item>
+        <item>"720"</item>
+        <item>"1080"</item>
+
+    </string-array>
+</resources>
