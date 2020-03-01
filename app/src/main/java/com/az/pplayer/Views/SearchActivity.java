@@ -32,12 +32,15 @@ import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutD
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.az.pplayer.Menu.LeftMenu.SETTINGS_CHANGED;
 
 public class SearchActivity extends AppCompatActivity
         implements  PinchView.IOnTouchListener, MaterialSearchBar.OnSearchActionListener, SwipyRefreshLayout.OnRefreshListener {
@@ -138,7 +141,7 @@ public class SearchActivity extends AppCompatActivity
     String prepareUrl(){
         if (searchPattern==null || searchPattern=="")
             return Url.MainUrl;
-        return Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+"&o="+UserStorage.Get().getSearchOrder();
+        return Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+UserStorage.Get().getSearchOrder();
 
 
 
@@ -271,5 +274,15 @@ public class SearchActivity extends AppCompatActivity
     enum gridUpdateFactor{
         in, out
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == SETTINGS_CHANGED) {
+            UserStorage.Get().UpdateConfiguration();
+            ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount( UserStorage.Get().getColumns());
+            ((VideoDataAdapter)recyclerView.getAdapter()).updateTextSize( UserStorage.Get().getFontSize());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

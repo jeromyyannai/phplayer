@@ -110,6 +110,11 @@ public class VideoDataAdapter  extends RecyclerView.Adapter<VideoDataAdapter.Vie
         return videoItems.size();
     }
 
+    public void updateTextSize(int fontSize) {
+        this.textSize = textSize;
+        notifyDataSetChanged();
+    }
+
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         ViewHolder v;
         public MyGestureListener(ViewHolder v)

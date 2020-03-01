@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name=".Views.CategoryViewActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:excludeFromRecents="true">
 
         </activity>
         <activity
@@ -38,26 +39,31 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:label="@string/title_activity_video_player"
             android:screenOrientation="landscape"
-            android:theme="@style/VideoPlayerTheme" />
+            android:theme="@style/VideoPlayerTheme"
+            android:excludeFromRecents="true"/>
         <activity
             android:name=".Views.SmallPlayerActivity"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:excludeFromRecents="true"/>
         <activity
             android:name=".Views.SearchActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:excludeFromRecents="true"/>
         <activity
             android:name=".Features.Downloads.DownloadsActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:excludeFromRecents="true"/>
         <activity
             android:name=".Features.Downloads.DVideoPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:label="@string/title_activity_video_player"
             android:screenOrientation="landscape"
-            android:theme="@style/VideoPlayerTheme" />
+            android:theme="@style/VideoPlayerTheme"
+            android:excludeFromRecents="true"/>
     </application>
 
 </manifest>

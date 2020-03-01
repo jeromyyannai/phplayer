@@ -102,6 +102,10 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
         this.textSize += textSize;
         notifyDataSetChanged();
     }
+    public void updateTextSize(int textSize){
+        this.textSize = textSize;
+        notifyDataSetChanged();
+    }
     public int getTextSize(){
         return textSize;
     }

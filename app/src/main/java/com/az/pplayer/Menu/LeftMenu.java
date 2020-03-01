@@ -43,8 +43,16 @@ public static final int SETTINGS_CHANGED=99;
                 context.startActivityForResult(intent,SETTINGS_CHANGED);
             }
         });
+        context.findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.os.Process.killProcess(android.os.Process.myPid());
 
+
+            }
+        });
     }
+
 
     @Override
     public void MenuItemClick(MenuItem item) {

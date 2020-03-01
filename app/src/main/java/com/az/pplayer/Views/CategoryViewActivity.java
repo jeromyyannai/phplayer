@@ -1,5 +1,6 @@
 package com.az.pplayer.Views;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.DisplayMetrics;
@@ -27,10 +28,13 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.az.pplayer.Menu.LeftMenu.SETTINGS_CHANGED;
 
 public class CategoryViewActivity  extends AppCompatActivity implements PinchView.IOnTouchListener {
     List<CategoryItem> Categories;
@@ -93,6 +97,15 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
         recyclerView.setAdapter(dataAdapter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == SETTINGS_CHANGED) {
+            UserStorage.Get().UpdateConfiguration();
+            ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount( UserStorage.Get().getColumns());
+            ((CategoryDataAdapter)recyclerView.getAdapter()).updateTextSize( UserStorage.Get().getFontSize());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void setupPinch() {
         pView = findViewById(R.id.nsView);
@@ -111,6 +124,7 @@ public class CategoryViewActivity  extends AppCompatActivity implements PinchVie
     }
     private boolean updateGrid(gridUpdateFactor updateFactor){
         int currentCount =  ((GridLayoutManager)recyclerView.getLayoutManager()).getSpanCount();
+
         if (updateFactor == gridUpdateFactor.in){
             if  (currentCount==10)
                 return  false;

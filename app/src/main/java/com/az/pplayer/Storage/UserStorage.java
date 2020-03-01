@@ -49,10 +49,10 @@ public class UserStorage {
         Type listType3 = new TypeToken<ArrayList<DownloadRequest>>(){}.getType();
         downloadRequests = new Gson().fromJson(downloadRequestsstr, listType3);
 
-        UpdateConfiguration(context);
+        UpdateConfiguration();
     }
 
-    public void UpdateConfiguration(Context context) {
+    public void UpdateConfiguration() {
        resolution = preferences.getString("video_resolution","480");
 
         if (java.util.Arrays.asList(resolutions).indexOf(resolution) ==-1)
@@ -65,7 +65,7 @@ public class UserStorage {
         downloadPath = preferences.getString("storage",Environment.getExternalStorageDirectory().getAbsolutePath());
         SearchMode = preferences.getString("search_mode","most_rescent");
         downloadResolution = preferences.getString("download_resolution","720");
-        HashedPassword = preferences.getString("signature","9f6992966d4c363ea0162a056cb45fe5");
+        HashedPassword = preferences.getString("signature","9f6992966d4c363ea0162a56cb45fe5");
     }
 
     private String resolution = "480";
@@ -217,9 +217,8 @@ public class UserStorage {
         this.columns = columns;
         if (PhpPlayerApp.getAppContext().getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT)
             columns+=2;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("columns", columns);
-        editor.commit();
+        preferences.edit().putString("columns_count",new Integer(columns).toString()).apply();
+
     }
 
     public int getFontSize() {
@@ -228,9 +227,8 @@ public class UserStorage {
 
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("fontSize", fontSize);
-        editor.commit();
+       preferences.edit().putString("font_size",new Integer(fontSize).toString()).apply();
+
     }
 
     public boolean getPasswordProtected() {
@@ -240,9 +238,13 @@ public class UserStorage {
     public String getSearchOrder(){
         switch (SearchMode){
             case "most_rescent":
-                return "mr";
+                return "&o=mr";
+            case "most_viewed":
+                return "&o=mv";
+            case "top_rated":
+                return "&o=tr";
                 default:
-                    return "mr";
+                    return "";
 
         }
 

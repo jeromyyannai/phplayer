@@ -17,6 +17,7 @@ import com.az.pplayer.Menu.LeftMenu;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Storage.UserStorage;
+import com.az.pplayer.Views.CategoryDataAdapter;
 import com.az.pplayer.Views.VideoDataAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutD
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -34,6 +36,8 @@ import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.az.pplayer.Menu.LeftMenu.SETTINGS_CHANGED;
 
 public class MainActivity extends AppCompatActivity
         implements  PinchView.IOnTouchListener {
@@ -120,7 +124,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == SETTINGS_CHANGED) {
+            UserStorage.Get().UpdateConfiguration();
+            ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanCount( UserStorage.Get().getColumns());
+            ((VideoDataAdapter)recyclerView.getAdapter()).updateTextSize( UserStorage.Get().getFontSize());
 
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     String prepareUrl(String url){
 
