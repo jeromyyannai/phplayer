@@ -12,32 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
-    public static List<DownloadRequest> _Map(List<dbDownloadRequest> requests){
-        List<DownloadRequest> result = new ArrayList<>();
-        if (requests == null)
-            return result;
-        for (dbDownloadRequest r: requests)
-        {
 
-            result.add(new DownloadRequest(r));
-        }
-        return result;
-    }
 
-    public static dbDownloadRequest Map(DownloadRequest request, int itemId) {
-        dbDownloadRequest result = new dbDownloadRequest();
-        result.Id = request.Id;
-        result.ImageUrl = request.ImageUrl;
-        result.PercentCompleted = request.PercentCompleted;
-        result.PreviewUrl = request.PreviewUrl;
-        result.Size = request.Size;
-        result.VideoDisplayName = request.VideoDisplayName;
-        result.fk_id_item = itemId;
-        result.Video = request.Video;
-        result.VideoId = request.VideoId;
-       // result.Tags = request.
-        return result;
-    }
+
 
 
 
@@ -47,11 +24,7 @@ public class Mapper {
     }
 
 
-    public static DownloadRequest Map(dbDownloadRequest request) {
-        if (request == null)
-            return null;
-        return new DownloadRequest(request);
-    }
+
 
     public static String[] MapTags(List<dbTag> tags) {
         String[] result = new String[tags.size()];
@@ -72,5 +45,29 @@ public class Mapper {
             result.add(new LocalVideoItem(r));
         }
         return result;
+    }
+
+    public static List<LocalVideoItem> MapRequest(List<dbVideoItem> videoItems) {
+        List<LocalVideoItem> result = new ArrayList<>();
+        if (videoItems == null)
+            return result;
+        for (dbVideoItem r: videoItems)
+        {
+
+            result.add(new LocalVideoItem(r));
+        }
+        return result;
+    }
+
+    public static DownloadRequest _Map(dbVideoItemTag r) {
+        if (r == null)
+            return null;
+        return new DownloadRequest(r.VideoItem);
+    }
+
+    public static DownloadRequest _Map(dbVideoItem r) {
+        if (r == null)
+            return null;
+        return new DownloadRequest(r);
     }
 }

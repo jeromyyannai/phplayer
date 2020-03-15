@@ -30,12 +30,7 @@ private com.az.pplayer.Storage.Db.db db;
                 VideoItems.setValue(localVideoItems);
             }
         });
-        db.getDownloadRequests(new Consumer<List<DownloadRequest>>() {
-            @Override
-            public void accept(List<DownloadRequest> requests) throws Exception {
-                DownloadedItems.setValue(requests);
-            }
-        });
+
     }
 
     public static DataStorage Get() {
@@ -44,16 +39,16 @@ private com.az.pplayer.Storage.Db.db db;
         return ourInstance;
     }
     private MutableLiveData<List<LocalVideoItem>> VideoItems = new MutableLiveData<>();
-    private MutableLiveData<List<DownloadRequest>> DownloadedItems = new MutableLiveData<>();
 
     public LiveData<List<LocalVideoItem>> GetDownloadedVideoList(){
     return  VideoItems;
 }
 
 
-    public List<DownloadRequest> GetDownloadRequests(){
+    public List<LocalVideoItem> GetDownloadRequests(){
 
-        return db.getUnfinishedDownloadRequests();
+       return db.getUnfinishedDownloadRequests();
+
     }
 
     public void AddDownloadedVideo(LocalVideoItem item){
@@ -79,7 +74,7 @@ private com.az.pplayer.Storage.Db.db db;
     public void RemoveDownloadedVideo(LocalVideoItem item){
         for (int i=0;i<VideoItems.getValue().size();i++){
             if (item.VideoPath.equals(VideoItems.getValue().get(i).VideoPath)){
-                DownloadedItems.getValue().remove(i);
+                VideoItems.getValue().remove(i);
                 break;
             }
         }
@@ -87,22 +82,34 @@ private com.az.pplayer.Storage.Db.db db;
     }
 
 
-    public DownloadRequest GetRequest(int id){
-        for (int i=0;i<DownloadedItems.getValue().size();i++){
-            if (id ==DownloadedItems.getValue().get(i).FetchId){
-                return  DownloadedItems.getValue().get(i);
+    public LocalVideoItem GetRequest(int id){
+        for (int i=0;i<VideoItems.getValue().size();i++){
+            if (id ==VideoItems.getValue().get(i).Request.FetchId){
+                return  VideoItems.getValue().get(i);
             }
         }
         return null;
     }
 
     public void RemoveDownloadRequest(int id){
-        for (int i=0;i<DownloadedItems.getValue().size();i++){
-            if (id ==DownloadedItems.getValue().get(i).FetchId){
-                DownloadedItems.getValue().remove(i);
-               db.deleteDownloadRequest(id);
+        for (int i=0;i<VideoItems.getValue().size();i++){
+            if (id ==VideoItems.getValue().get(i).Request.FetchId){
+                VideoItems.getValue().get(i).IsDownloaded = true;
+                VideoItems.getValue().get(i).Request.PercentCompleted = 100;
+               db.deleteVideoItem(VideoItems.getValue().get(i));
+               break;
             }
         }
     }
 
+    public void CompleteDownloadRequest(int id) {
+        for (int i=0;i<VideoItems.getValue().size();i++){
+            if (id ==VideoItems.getValue().get(i).Request.FetchId){
+                VideoItems.getValue().get(i).IsDownloaded = true;
+                VideoItems.getValue().get(i).Request.PercentCompleted = 100;
+                db.updateVideoItem(VideoItems.getValue().get(i),new BlockingMultiObserver());
+                break;
+            }
+        }
+    }
 }

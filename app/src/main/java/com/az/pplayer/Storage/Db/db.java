@@ -31,32 +31,8 @@ public  List<LocalVideoItem> localVideoItems;
 
     }
 
-    public void getDownloadRequests(final Consumer<List<DownloadRequest>> action){
-        _db.videoItemDao().getDownloadRequests()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<dbDownloadRequest>>() {
-                    @Override
-                    public void accept(List<dbDownloadRequest> requests) throws Exception {
-                        try {
-                            action.accept(Mapper._Map(requests));
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                    }
-                });
 
-    }
-    public void updateDownloadRequest(DownloadRequest request, final CompletableObserver action){
-//        if (request.Id <=0) {
-//            Completable.fromAction(() -> _db.videoItemDao().insertDownloadRequest(Mapper.Map(request)))
-//            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(action);
-//        } else{
-//            Completable.fromAction(() -> _db.videoItemDao().updateDownloadRequest(Mapper.Map(request)))
-//                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(action);
-//
-//
-//        }
-    }
+
 public void getVideoItems(Consumer<List<LocalVideoItem>> action){
     _db.videoItemDao().getFullVideoItem()
             .observeOn(AndroidSchedulers.mainThread())
@@ -72,18 +48,18 @@ public void getVideoItems(Consumer<List<LocalVideoItem>> action){
             });
 }
 
-public List<DownloadRequest> getUnfinishedDownloadRequests(){
-        List<dbDownloadRequest> result =  _db.videoItemDao().getUnfinishedDownloadRequests();
+public List<LocalVideoItem> getUnfinishedDownloadRequests(){
+        List<dbVideoItem> result =  _db.videoItemDao().getUnfinishedDownloadRequests();
         if (result == null)
             return new ArrayList<>();
-        return  Mapper._Map(result);
+        return  Mapper.MapRequest(result);
 }
 public void updateVideoItem(LocalVideoItem item, CompletableObserver action){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 dbVideoItem dbitem = Mapper.Map(item);
-                dbVideoItem existedItem = _db.videoItemDao().findVideoByPath(dbitem.VideoPath);
+                dbVideoItem existedItem = _db.videoItemDao().findVideoByPath(dbitem.VideoId);
                 if (existedItem != null)
                     dbitem.id_item = existedItem.id_item;
                 if (item.Id ==0){
@@ -92,10 +68,7 @@ public void updateVideoItem(LocalVideoItem item, CompletableObserver action){
                 } else{
                     _db.videoItemDao().updateVideoItem(dbitem);
                 }
-                if (item.Request.Id==0)
-                    item.Request.Id =  (int)_db.videoItemDao().insertDownloadRequest(Mapper.Map(item.Request,item.Id));
-                else
-                    _db.videoItemDao().updateDownloadRequest(Mapper.Map(item.Request,item.Id));
+
                 List<dbTag> tags = _db.videoItemDao().getTags();
 
 
@@ -107,21 +80,11 @@ public void updateVideoItem(LocalVideoItem item, CompletableObserver action){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (item.Request != null)
-                        _db.videoItemDao().deleteDownloadRequest(Mapper.Map(item.Request,item.Id));
-
                     _db.videoItemDao().deleteVideoItem(Mapper.Map(item));
                 }
             }).start();
     }
-    public  void deleteDownloadRequest(long id){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                _db.videoItemDao().deleteDownloadRequest(id);
-            }
-        }).start();
-    }
+
     private void insertTags(dbVideoItem dbitem, String[] tags, List<dbTag> dbTags) {
         //check if tags exists in the db, otherwice insert
         //update video_item_tags table

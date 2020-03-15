@@ -25,10 +25,8 @@ public interface VideoItemDao {
     @Query("SELECT * FROM category")
     Flowable<List<dbCategory>> getCategories();
 
-    @Query("SELECT * FROM download_request")
-    Flowable<List<dbDownloadRequest>> getDownloadRequests();
-    @Query("SELECT * FROM download_request")
-    List<dbDownloadRequest> getUnfinishedDownloadRequests();
+    @Query("SELECT * FROM video_item WHERE IsDownloaded = 0")
+    List<dbVideoItem> getUnfinishedDownloadRequests();
     @Query("SELECT * FROM video_item")
     Flowable<List<dbVideoItem>> getVideoItem();
 
@@ -45,16 +43,7 @@ public interface VideoItemDao {
     @Query("SELECT * FROM tag WHERE id_tag =:id")
     List<dbTagVideoItem> getTagVideoItems(int id);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertDownloadRequest(dbDownloadRequest entity);
 
-    @Update
-    void updateDownloadRequest(dbDownloadRequest entity);
-
-    @Query("DELETE FROM download_request WHERE id_request = :id")
-    void deleteDownloadRequest(long id);
-@Delete
-void deleteDownloadRequest(dbDownloadRequest request);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertVideoItem(dbVideoItem entity);
 
@@ -69,6 +58,6 @@ void deleteDownloadRequest(dbDownloadRequest request);
     void insertItemTag(dbVideoItemTagRef tag);
     @Update
     void updateItemTag(dbVideoItemTagRef tag);
-    @Query("SELECT * FROM video_item Where VideoPath =:videoPath")
-    dbVideoItem findVideoByPath(String videoPath);
+    @Query("SELECT * FROM video_item Where VideoId =:videoId")
+    dbVideoItem findVideoByPath(String videoId);
 }

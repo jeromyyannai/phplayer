@@ -19,7 +19,5 @@ public class dbVideoItemTag {
         )
         public List<dbTag> Tags;
 
-        @Relation( parentColumn = "id_item",
-                entityColumn = "fk_id_item")
-        public dbDownloadRequest request;
+
 }

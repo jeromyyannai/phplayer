@@ -66,8 +66,9 @@ public class DownloadService {
             @Override
             public void run() {
                 DownloadRequest request = ParserService.ParseVideoPage(item);
+                LocalVideoItem item = new LocalVideoItem(request);
                 if (request != null){
-                    Download(request);
+                    Download(item);
                 }
             }
             }).start();
@@ -77,39 +78,41 @@ public class DownloadService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<DownloadRequest> requests = DataStorage.Get().GetDownloadRequests();
-                for (DownloadRequest r : requests) {
-                    VideoItem i = new VideoItem(r);
+                List<LocalVideoItem> requests = DataStorage.Get().GetDownloadRequests();
+                for (LocalVideoItem r : requests) {
+                    VideoItem i = new VideoItem(r.Request);
                     DownloadRequest request = ParserService.ParseVideoPage(i);
+
                     if (request != null){
-                        Download(request);
+                        LocalVideoItem item = new LocalVideoItem(request);
+                        Download(item);
                     }
                 }
             }
         }).start();
     }
 
-    public void Download(final DownloadRequest request){
+    public void Download(final LocalVideoItem request){
 
 
 
-        File file = new File (PathService.GetVideoLocalPath(request.Url));
+        File file = new File (PathService.GetVideoLocalPath(request.Request.Url));
         if (file.exists ()) file.delete ();
-        final LocalVideoItem videoItem = new LocalVideoItem(request);
+       // final LocalVideoItem videoItem = new LocalVideoItem(request);
 
 
 
-        final Request downloadRequest = new Request(request.Url, file.getPath());
+        final Request downloadRequest = new Request(request.Request.Url, file.getPath());
         downloadRequest.setPriority(Priority.HIGH);
         downloadRequest.setNetworkType(NetworkType.WIFI_ONLY);
 
         fetch.enqueue(downloadRequest, new Func<Request>() {
             @Override
             public void call(@NotNull Request result) {
-                request.FetchId = result.getId();
-                videoItem.Request = request;
+                request.Request.FetchId = result.getId();
+               // videoItem.Request = request;
                 //DataStorage.Get().AddDownloadRequest(request);
-                DataStorage.Get().AddDownloadedVideo(videoItem);
+                DataStorage.Get().AddDownloadedVideo(request);
             }
         }, new Func<Error>() {
             @Override
@@ -117,8 +120,8 @@ public class DownloadService {
                 Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
-        querySupportItem(request.ImageUrl);
-        querySupportItem(request.PreviewUrl);
+        querySupportItem(request.Request.ImageUrl);
+        querySupportItem(request.Request.PreviewUrl);
     }
 
     private void querySupportItem(String url){
@@ -159,25 +162,27 @@ public class DownloadService {
         public void onCompleted(@NotNull Download download) {
             super.onCompleted(download);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            DownloadRequest request = DataStorage.Get().GetRequest(download.getId());
+            LocalVideoItem request = DataStorage.Get().GetRequest(download.getId());
             if (request == null)
                 return;
-            notificationManager.cancel(request.FetchId);
-            DataStorage.Get().RemoveDownloadRequest(download.getId());
+            notificationManager.cancel(request.Request.FetchId);
+            DataStorage.Get().CompleteDownloadRequest(download.getId());
 
         }
 
         @Override
         public void onProgress(@NotNull Download download, long etaInMilliSeconds, long downloadedBytesPerSecond) {
             super.onProgress(download, etaInMilliSeconds, downloadedBytesPerSecond);
-            DownloadRequest request = DataStorage.Get().GetRequest(download.getId());
+            LocalVideoItem request = DataStorage.Get().GetRequest(download.getId());
             if (request == null)
                 return;
-            int id = request.FetchId;
-            int percent =0;
+            int id = request.Request.FetchId;
+
+            request.Request.Size = download.getTotal();
             if (download.getTotal() != 0) {
-                 percent = (int) (download.getDownloaded() * 100 / download.getTotal());
+                request.Request.PercentCompleted = (int) (download.getDownloaded() * 100 / download.getTotal());
             }
+            DataStorage.Get().AddDownloadedVideo(request);
 
         }
 

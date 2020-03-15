@@ -32,6 +32,7 @@ import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.Data.ExoPlayerVideoHandler;
 import com.az.pplayer.Data.VideoLinkHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
+import com.az.pplayer.Features.Downloads.LocalVideoItem;
 import com.az.pplayer.MainActivity;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.CategoryStorageItem;
@@ -139,7 +140,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 //                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 200);
 //                        }
                         if (request != null)
-                        DownloadService.Get().Download(request);
+                        DownloadService.Get().Download(new LocalVideoItem(request));
                         break;
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
