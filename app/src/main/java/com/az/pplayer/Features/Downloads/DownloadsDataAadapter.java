@@ -26,6 +26,7 @@ import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.R;
 import com.az.pplayer.Services.DownloadRequest;
 import com.az.pplayer.Services.DownloadService;
+import com.az.pplayer.Storage.DataStorage;
 import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.VideoDataAdapter;
 import com.az.pplayer.Views.VideoPlayerActivity;
@@ -43,9 +44,12 @@ import com.tonyodev.fetch2.FetchListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAadapter.ViewHolder> {
@@ -54,9 +58,10 @@ public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAad
     private int textSize;
     private  int screenWidth;
 
-    public DownloadsDataAadapter(Context context, List<LocalVideoItem> videoItems, int textSize) {
+    public DownloadsDataAadapter(Context context, LiveData<List<LocalVideoItem>> videoItems, int textSize) {
         this.context = context;
-        this.videoItems = videoItems;
+       this.videoItems = new ArrayList<>();
+        videoItems.observe((LifecycleOwner) context, localVideoItems -> {this.videoItems = localVideoItems; notifyDataSetChanged();});
         this.textSize = textSize;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -118,6 +123,7 @@ public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAad
     }
     @Override
     public int getItemCount() {
+
         return videoItems.size();
     }
 
@@ -126,7 +132,7 @@ public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAad
 
         @Override
         public void onError(@NotNull Download download, @NotNull Error error, @org.jetbrains.annotations.Nullable Throwable throwable) {
-            UserStorage.Get().RemoveDownloadRequest(download.getId());
+            DataStorage.Get().RemoveDownloadRequest(download.getId());
             super.onError(download, error, throwable);
         }
 
@@ -159,7 +165,7 @@ public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAad
             for (int i=0;i<videoItems.size();i++){
                 if (videoItems.get(i).Request == null)
                     continue;
-                if (id ==videoItems.get(i).Request.Id){
+                if (id ==videoItems.get(i).Request.FetchId){
                     return  videoItems.get(i);
                 }
             }
@@ -259,7 +265,7 @@ public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAad
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        UserStorage.Get().RemoveDownloadedVideo(item);
+                                        DataStorage.Get().RemoveDownloadedVideo(item);
                                         //videoItems.remove(v.item);
                                         notifyDataSetChanged();
                                         new Thread(new Runnable() {

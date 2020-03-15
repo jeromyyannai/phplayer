@@ -87,7 +87,7 @@ public class ParserService {
             VideoLinkHolder.Save(mVideoUrl.Video, urls);
             DataHolder.Save(mVideoUrl.Video, VideoLinksSource.ParseLinks(doc));
             return new DownloadRequest(VideoLinkHolder.GetDownloadUrl(mVideoUrl.Video),
-                    mVideoUrl.Title,Tags,mVideoUrl.Image,mVideoUrl.Preview);
+                    mVideoUrl.Title,Tags,mVideoUrl.Image,mVideoUrl.Preview,0,mVideoUrl.VideoId,mVideoUrl.Video);
         }
      catch (
     IOException e) {

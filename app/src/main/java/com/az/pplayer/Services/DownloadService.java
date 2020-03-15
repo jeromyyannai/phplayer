@@ -11,6 +11,7 @@ import com.az.pplayer.MainActivity;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.PhpPlayerApp;
 import com.az.pplayer.R;
+import com.az.pplayer.Storage.DataStorage;
 import com.az.pplayer.Storage.UserStorage;
 import com.tonyodev.fetch2.AbstractFetchListener;
 import com.tonyodev.fetch2.Download;
@@ -35,8 +36,10 @@ import androidx.core.app.NotificationManagerCompat;
 public class DownloadService {
     private static DownloadService instance;
     public static DownloadService Get() {
-        if (instance == null)
+        if (instance == null) {
             instance = new DownloadService(PhpPlayerApp.getAppContext());
+            instance.Requeue();
+        }
         return instance;
     }
 
@@ -69,6 +72,23 @@ public class DownloadService {
             }
             }).start();
     }
+
+    public void Requeue(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<DownloadRequest> requests = DataStorage.Get().GetDownloadRequests();
+                for (DownloadRequest r : requests) {
+                    VideoItem i = new VideoItem(r);
+                    DownloadRequest request = ParserService.ParseVideoPage(i);
+                    if (request != null){
+                        Download(request);
+                    }
+                }
+            }
+        }).start();
+    }
+
     public void Download(final DownloadRequest request){
 
 
@@ -86,9 +106,10 @@ public class DownloadService {
         fetch.enqueue(downloadRequest, new Func<Request>() {
             @Override
             public void call(@NotNull Request result) {
-                request.Id = result.getId();
-                UserStorage.Get().AddDownloadRequest(request);
-                UserStorage.Get().AddDownloadedVideo(videoItem);
+                request.FetchId = result.getId();
+                videoItem.Request = request;
+                //DataStorage.Get().AddDownloadRequest(request);
+                DataStorage.Get().AddDownloadedVideo(videoItem);
             }
         }, new Func<Error>() {
             @Override
@@ -130,7 +151,7 @@ public class DownloadService {
 
         @Override
         public void onError(@NotNull Download download, @NotNull Error error, @Nullable Throwable throwable) {
-            UserStorage.Get().RemoveDownloadRequest(download.getId());
+            DataStorage.Get().RemoveDownloadRequest(download.getId());
             super.onError(download, error, throwable);
         }
 
@@ -138,21 +159,21 @@ public class DownloadService {
         public void onCompleted(@NotNull Download download) {
             super.onCompleted(download);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            DownloadRequest request = UserStorage.Get().GetRequest(download.getId());
+            DownloadRequest request = DataStorage.Get().GetRequest(download.getId());
             if (request == null)
                 return;
-            notificationManager.cancel(request.Id);
-            UserStorage.Get().RemoveDownloadRequest(download.getId());
+            notificationManager.cancel(request.FetchId);
+            DataStorage.Get().RemoveDownloadRequest(download.getId());
 
         }
 
         @Override
         public void onProgress(@NotNull Download download, long etaInMilliSeconds, long downloadedBytesPerSecond) {
             super.onProgress(download, etaInMilliSeconds, downloadedBytesPerSecond);
-            DownloadRequest request = UserStorage.Get().GetRequest(download.getId());
+            DownloadRequest request = DataStorage.Get().GetRequest(download.getId());
             if (request == null)
                 return;
-            int id = request.Id;
+            int id = request.FetchId;
             int percent =0;
             if (download.getTotal() != 0) {
                  percent = (int) (download.getDownloaded() * 100 / download.getTotal());

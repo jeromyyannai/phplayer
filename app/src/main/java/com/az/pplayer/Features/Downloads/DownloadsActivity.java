@@ -22,6 +22,7 @@ import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.R;
 import com.az.pplayer.Services.DownloadRequest;
 import com.az.pplayer.Services.DownloadService;
+import com.az.pplayer.Storage.DataStorage;
 import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.VideoDataAdapter;
 import com.google.android.material.navigation.NavigationView;
@@ -132,7 +133,7 @@ public class DownloadsActivity  extends AppCompatActivity
 
 
             DownloadsDataAadapter dataAdapter = new DownloadsDataAadapter(this,
-                    UserStorage.Get().GetDownloadedVideoList(),
+                    DataStorage.Get().GetDownloadedVideoList(),
                     UserStorage.Get().getFontSize());
             recyclerView.setAdapter(dataAdapter);
         }

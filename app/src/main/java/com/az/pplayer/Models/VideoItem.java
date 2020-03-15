@@ -1,5 +1,7 @@
 package com.az.pplayer.Models;
 
+import com.az.pplayer.Services.DownloadRequest;
+
 public class VideoItem {
     public String Title;
     public String Video;
@@ -13,5 +15,13 @@ public class VideoItem {
         Preview = preview;
         VideoId = videoId;
         Image = image;
+    }
+
+    public VideoItem(DownloadRequest r) {
+        Title = r.VideoDisplayName;
+        Video = r.Video;
+        Preview = r.PreviewUrl;
+        VideoId = r.VideoId;
+        Image = r.ImageUrl;
     }
 }

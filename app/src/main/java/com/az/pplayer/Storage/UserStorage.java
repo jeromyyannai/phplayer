@@ -40,16 +40,8 @@ public class UserStorage {
         String rescentCatsstr = preferences.getString("rescentCats","");
         Type listType = new TypeToken<ArrayList<CategoryStorageItem>>(){}.getType();
         rescentCats = new Gson().fromJson(rescentCatsstr, listType);
-
-        String DownloadedItemsstr = preferences.getString("DownloadedItems","");
-        Type listType2 = new TypeToken<ArrayList<LocalVideoItem>>(){}.getType();
-        DownloadedItems = new Gson().fromJson(DownloadedItemsstr, listType2);
-
-        String downloadRequestsstr = preferences.getString("downloadRequests","");
-        Type listType3 = new TypeToken<ArrayList<DownloadRequest>>(){}.getType();
-        downloadRequests = new Gson().fromJson(downloadRequestsstr, listType3);
-
         UpdateConfiguration();
+
     }
 
     public void UpdateConfiguration() {
@@ -82,8 +74,7 @@ public class UserStorage {
         return  resolution;
     }
 
-    private List<LocalVideoItem> DownloadedItems;
-    private List<DownloadRequest> downloadRequests;
+
     private  String HashedPassword;
 
     public String getDownloadPath(){
@@ -127,81 +118,6 @@ public class UserStorage {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("rescentCats", new Gson().toJson(rescentCats));
         editor.commit();
-    }
-
-    public List<LocalVideoItem> GetDownloadedVideoList(){
-        if (DownloadedItems == null)
-            DownloadedItems = new ArrayList<>();
-        List<DownloadRequest> requests = GetDownloadRequests();
-        for (LocalVideoItem item : DownloadedItems){
-            if (item.Request != null) {
-                DownloadRequest request = GetRequest(item.Request.Id);
-                if (request != null)
-                    item.IsDownloaded = false;
-
-            }
-        }
-        return DownloadedItems;
-    }
-    public List<DownloadRequest> GetDownloadRequests(){
-        if (downloadRequests == null)
-            downloadRequests = new ArrayList<>();
-        return downloadRequests;
-    }
-
-    public void AddDownloadedVideo(LocalVideoItem item){
-        if (DownloadedItems == null)
-            DownloadedItems = new ArrayList<>();
-        DownloadedItems.add(item);
-
-
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("DownloadedItems", new Gson().toJson(DownloadedItems));
-        editor.apply();
-    }
-
-    public void AddDownloadRequest(DownloadRequest item){
-        if (downloadRequests == null)
-            downloadRequests = new ArrayList<>();
-        downloadRequests.add(item);
-
-
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("downloadRequests", new Gson().toJson(downloadRequests));
-        editor.apply();
-    }
-    public void RemoveDownloadedVideo(LocalVideoItem item){
-        for (int i=0;i<DownloadedItems.size();i++){
-            if (item.VideoPath.equals(DownloadedItems.get(i).VideoPath)){
-                DownloadedItems.remove(i);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("DownloadedItems", new Gson().toJson(DownloadedItems));
-                editor.commit();
-                return;
-            }
-        }
-    }
-
-
-    public DownloadRequest GetRequest(int id){
-        for (int i=0;i<downloadRequests.size();i++){
-            if (id ==downloadRequests.get(i).Id){
-                return  downloadRequests.get(i);
-            }
-        }
-        return null;
-    }
-
-    public void RemoveDownloadRequest(int id){
-        for (int i=0;i<downloadRequests.size();i++){
-            if (id ==downloadRequests.get(i).Id){
-                downloadRequests.remove(i);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("downloadRequests", new Gson().toJson(downloadRequests));
-                editor.apply();
-                return;
-            }
-        }
     }
 
     public int getColumns() {
