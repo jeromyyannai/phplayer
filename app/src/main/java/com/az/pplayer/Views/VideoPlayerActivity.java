@@ -28,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.Data.ExoPlayerVideoHandler;
 import com.az.pplayer.Data.VideoLinkHolder;
@@ -44,6 +45,7 @@ import com.az.pplayer.Services.DownloadRequest;
 import com.az.pplayer.Services.DownloadService;
 import com.az.pplayer.Services.ParserService;
 import com.az.pplayer.Storage.UserStorage;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
@@ -88,7 +90,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class VideoPlayerActivity extends AppCompatActivity {
+public class VideoPlayerActivity extends CommonActivity {
     private VideoItem mVideoUrl;
     public static final String INTENT_EXTRA_VIDEO_URL = "VIDEO_URL";
 
@@ -209,6 +211,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(getApplicationContext(), Uri.parse(mVideoUrl), mSimpleExoPlayerView, findViewById(R.id.pBarBuffer), findViewById(R.id.container_play_pause));
         ExoPlayerVideoHandler.getInstance().goToForeground();
+        SimpleExoPlayer player =(SimpleExoPlayer) mSimpleExoPlayerView.getPlayer();
+        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+
         mIbFullScreen = findViewById(R.id.exo_fullscreen_btn);
         mIbFullScreen.setOnClickListener(
                 new View.OnClickListener() {

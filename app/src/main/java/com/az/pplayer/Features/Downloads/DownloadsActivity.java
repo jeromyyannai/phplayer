@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 import com.az.pplayer.Base.PinchView;
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Constants.Url;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
@@ -47,7 +48,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DownloadsActivity  extends AppCompatActivity
+public class DownloadsActivity  extends CommonActivity
         implements  PinchView.IOnTouchListener {
 
         PinchView pView;

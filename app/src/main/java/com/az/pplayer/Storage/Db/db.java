@@ -54,25 +54,31 @@ public List<LocalVideoItem> getUnfinishedDownloadRequests(){
             return new ArrayList<>();
         return  Mapper.MapRequest(result);
 }
-public void updateVideoItem(LocalVideoItem item, CompletableObserver action){
+public void updateVideoItem(LocalVideoItem item, CompletableObserver action,boolean updateTags){
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean isNewItem = false;
                 dbVideoItem dbitem = Mapper.Map(item);
                 dbVideoItem existedItem = _db.videoItemDao().findVideoByPath(dbitem.VideoId);
-                if (existedItem != null)
+                if (existedItem != null) {
                     dbitem.id_item = existedItem.id_item;
-                if (item.Id ==0){
+                }
+                if (dbitem.id_item ==0){
+                    isNewItem = true;
                     dbitem.id_item = (int)_db.videoItemDao().insertVideoItem(dbitem);
+                    List<dbTag> tags = _db.videoItemDao().getTags();
+                    insertTags(dbitem,item.Tags,tags);
 
                 } else{
                     _db.videoItemDao().updateVideoItem(dbitem);
                 }
 
-                List<dbTag> tags = _db.videoItemDao().getTags();
+                if (updateTags && !isNewItem){
+                    List<dbTag> tags = _db.videoItemDao().getTags();
+                    insertTags(dbitem,item.Tags,tags);
 
-
-                insertTags(dbitem,item.Tags,tags);
+                }
             }
         }).start();
    }
@@ -89,14 +95,16 @@ public void updateVideoItem(LocalVideoItem item, CompletableObserver action){
         //check if tags exists in the db, otherwice insert
         //update video_item_tags table
         dbVideoItemTag itemTag = _db.videoItemDao().getVideoItemTags(dbitem.id_item);
-        for (String tag:tags){
-            dbTag dbTag = findTag(dbTags,tag);
+        for (int i=0;i<tags.length;i++){
+            if (tags[i] == null)
+                continue;
+            dbTag dbTag = findTag(dbTags,tags[i]);
 
             if (itemTag != null && tagExists(itemTag.Tags,dbTag))
                 continue;
             if (dbTag == null){
                 dbTag = new dbTag();
-                dbTag.tag = tag;
+                dbTag.tag = tags[i];
                 dbTag.id_tag = (int)_db.videoItemDao().insertTag(dbTag);
             }
             _db.videoItemDao().insertItemTag(new dbVideoItemTagRef(dbTag.id_tag,dbitem.id_item));
@@ -115,6 +123,8 @@ public void updateVideoItem(LocalVideoItem item, CompletableObserver action){
 
     private dbTag findTag(List<dbTag> dbTags, String tag) {
         for (dbTag _dbTag: dbTags){
+            if (_dbTag == null )
+                continue;
             if (_dbTag.tag.equals(tag))
                 return _dbTag;
         }

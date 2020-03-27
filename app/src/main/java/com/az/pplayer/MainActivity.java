@@ -39,7 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.az.pplayer.Menu.LeftMenu.SETTINGS_CHANGED;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends CommonActivity
         implements  PinchView.IOnTouchListener {
 
     PinchView pView;

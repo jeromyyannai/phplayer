@@ -1,5 +1,6 @@
 package com.az.pplayer.Models;
 
+import com.az.pplayer.Features.Downloads.LocalVideoItem;
 import com.az.pplayer.Services.DownloadRequest;
 
 public class VideoItem {
@@ -23,5 +24,13 @@ public class VideoItem {
         Preview = r.PreviewUrl;
         VideoId = r.VideoId;
         Image = r.ImageUrl;
+    }
+
+    public VideoItem(LocalVideoItem r) {
+        Title = r.Name;
+        Video = r.Request.Video;
+        Preview = r.Request.PreviewUrl;
+        VideoId = r.Request.VideoId;
+        Image = r.Request.ImageUrl;
     }
 }

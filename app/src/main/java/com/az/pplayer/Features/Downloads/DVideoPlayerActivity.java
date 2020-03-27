@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.Data.ExoPlayerVideoHandler;
 import com.az.pplayer.Data.VideoLinkHolder;
@@ -24,6 +25,10 @@ import com.az.pplayer.Storage.UserStorage;
 import com.az.pplayer.Views.SmallPlayerActivity;
 import com.az.pplayer.Views.VideoDataAdapter;
 import com.az.pplayer.Views.VideoPlayerActivity;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,7 +48,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DVideoPlayerActivity extends AppCompatActivity {
+public class DVideoPlayerActivity extends CommonActivity {
     private LocalVideoItem mVideoUrl;
     public static final String INTENT_EXTRA_VIDEO_URL = "VIDEO_URL";
 
@@ -80,11 +85,14 @@ public class DVideoPlayerActivity extends AppCompatActivity {
 
 
     private void initializePlayer(final String mVideoUrl) {
+
         mSimpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.player_view);
         mIbFullScreen = (ImageButton) findViewById(R.id.exo_fullscreen_btn);
-
         ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(getApplicationContext(), Uri.parse(mVideoUrl), mSimpleExoPlayerView, findViewById(R.id.pBarBuffer), findViewById(R.id.container_play_pause));
         ExoPlayerVideoHandler.getInstance().goToForeground();
+        mSimpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+        SimpleExoPlayer player =(SimpleExoPlayer) mSimpleExoPlayerView.getPlayer();
+        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
         mIbFullScreen = findViewById(R.id.exo_fullscreen_btn);
         mIbFullScreen.setOnClickListener(
                 new View.OnClickListener() {

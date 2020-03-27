@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.MainActivity;
 import com.az.pplayer.R;
 import com.az.pplayer.Storage.UserStorage;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends CommonActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -45,6 +45,7 @@ public class dbVideoItem {
         PercentCompleted= item.Request.PercentCompleted;
         Video = item.Request.Video;
         VideoId = item.Request.VideoId;
+        FetchId = item.Request.FetchId;
 
     }
 

@@ -68,7 +68,7 @@ private com.az.pplayer.Storage.Db.db db;
            public void onError(Throwable e) {
 
            }
-       });
+       },true);
     }
 
     public void RemoveDownloadedVideo(LocalVideoItem item){
@@ -84,7 +84,7 @@ private com.az.pplayer.Storage.Db.db db;
 
     public LocalVideoItem GetRequest(int id){
         for (int i=0;i<VideoItems.getValue().size();i++){
-            if (id ==VideoItems.getValue().get(i).Request.FetchId){
+            if (id ==VideoItems.getValue().get(i).Request.FetchId ||  id ==-VideoItems.getValue().get(i).Request.FetchId){
                 return  VideoItems.getValue().get(i);
             }
         }
@@ -93,7 +93,7 @@ private com.az.pplayer.Storage.Db.db db;
 
     public void RemoveDownloadRequest(int id){
         for (int i=0;i<VideoItems.getValue().size();i++){
-            if (id ==VideoItems.getValue().get(i).Request.FetchId){
+            if (id ==VideoItems.getValue().get(i).Request.FetchId || id ==-VideoItems.getValue().get(i).Request.FetchId){
                 VideoItems.getValue().get(i).IsDownloaded = true;
                 VideoItems.getValue().get(i).Request.PercentCompleted = 100;
                db.deleteVideoItem(VideoItems.getValue().get(i));
@@ -104,10 +104,10 @@ private com.az.pplayer.Storage.Db.db db;
 
     public void CompleteDownloadRequest(int id) {
         for (int i=0;i<VideoItems.getValue().size();i++){
-            if (id ==VideoItems.getValue().get(i).Request.FetchId){
+            if (id ==VideoItems.getValue().get(i).Request.FetchId || id ==-VideoItems.getValue().get(i).Request.FetchId){
                 VideoItems.getValue().get(i).IsDownloaded = true;
                 VideoItems.getValue().get(i).Request.PercentCompleted = 100;
-                db.updateVideoItem(VideoItems.getValue().get(i),new BlockingMultiObserver());
+                db.updateVideoItem(VideoItems.getValue().get(i),new BlockingMultiObserver(),false);
                 break;
             }
         }

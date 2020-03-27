@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.az.pplayer.Base.PinchView;
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Constants.Url;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
@@ -42,7 +43,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.az.pplayer.Menu.LeftMenu.SETTINGS_CHANGED;
 
-public class SearchActivity extends AppCompatActivity
+public class SearchActivity extends CommonActivity
         implements  PinchView.IOnTouchListener, MaterialSearchBar.OnSearchActionListener, SwipyRefreshLayout.OnRefreshListener {
 
     PinchView pView;

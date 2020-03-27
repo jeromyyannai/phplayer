@@ -35,6 +35,7 @@ public class LocalVideoItem {
         Tags = Mapper.MapTags( r.Tags);
         Request = Mapper._Map(r);
         IsDownloaded = r.VideoItem.IsDownloaded;
+        ImagePath = r.VideoItem.ImagePath;
     }
 
     public LocalVideoItem() {
@@ -49,5 +50,6 @@ public class LocalVideoItem {
         Tags = new String[0];
         Request = Mapper._Map(r);
         IsDownloaded = r.IsDownloaded;
+        ImagePath = r.ImagePath;
     }
 }

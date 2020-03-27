@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.az.pplayer.Base.PinchView;
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Data.CategoryHolder;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.DataSource.CategorySource;
@@ -36,7 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.az.pplayer.Menu.LeftMenu.SETTINGS_CHANGED;
 
-public class CategoryViewActivity  extends AppCompatActivity implements PinchView.IOnTouchListener {
+public class CategoryViewActivity  extends CommonActivity implements PinchView.IOnTouchListener {
     List<CategoryItem> Categories;
     PinchView pView;
     private ScaleGestureDetector mScaleGestureDetector;

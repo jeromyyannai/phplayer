@@ -80,7 +80,7 @@ public class DownloadService {
             public void run() {
                 List<LocalVideoItem> requests = DataStorage.Get().GetDownloadRequests();
                 for (LocalVideoItem r : requests) {
-                    VideoItem i = new VideoItem(r.Request);
+                    VideoItem i = new VideoItem(r);
                     DownloadRequest request = ParserService.ParseVideoPage(i);
 
                     if (request != null){
@@ -104,7 +104,7 @@ public class DownloadService {
 
         final Request downloadRequest = new Request(request.Request.Url, file.getPath());
         downloadRequest.setPriority(Priority.HIGH);
-        downloadRequest.setNetworkType(NetworkType.WIFI_ONLY);
+        downloadRequest.setNetworkType(NetworkType.ALL);
 
         fetch.enqueue(downloadRequest, new Func<Request>() {
             @Override
@@ -132,7 +132,7 @@ public class DownloadService {
 
         final Request downloadRequest = new Request(url, file.getPath());
         downloadRequest.setPriority(Priority.NORMAL);
-        downloadRequest.setNetworkType(NetworkType.WIFI_ONLY);
+        downloadRequest.setNetworkType(NetworkType.ALL);
 
         fetch.enqueue(downloadRequest, new Func<Request>() {
             @Override

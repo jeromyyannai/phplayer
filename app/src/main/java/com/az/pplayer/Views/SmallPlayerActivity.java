@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Data.ExoPlayerVideoHandler;
 import com.az.pplayer.R;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
@@ -15,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-public class SmallPlayerActivity extends AppCompatActivity {
+public class SmallPlayerActivity extends CommonActivity {
     public static final String INTENT_EXTRA_VIDEO_URL = "VIDEO_URL";
     private ImageButton mIbFullScreen;
     private SimpleExoPlayerView mSimpleExoPlayerView;

@@ -61,7 +61,9 @@ public class DownloadsDataAadapter extends RecyclerView.Adapter<DownloadsDataAad
     public DownloadsDataAadapter(Context context, LiveData<List<LocalVideoItem>> videoItems, int textSize) {
         this.context = context;
        this.videoItems = new ArrayList<>();
-        videoItems.observe((LifecycleOwner) context, localVideoItems -> {this.videoItems = localVideoItems; notifyDataSetChanged();});
+        videoItems.observe((LifecycleOwner) context, localVideoItems -> {
+            this.videoItems = localVideoItems;
+            notifyDataSetChanged();});
         this.textSize = textSize;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

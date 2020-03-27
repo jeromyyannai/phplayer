@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.text.InputType;
 import android.widget.EditText;
 
+import com.az.pplayer.CommonActivity;
 import com.az.pplayer.Models.Storage;
 import com.az.pplayer.R;
 import com.az.pplayer.Services.StorageService;
@@ -24,7 +25,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-public class SettingsActivity extends AppCompatActivity implements
+public class SettingsActivity extends CommonActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     private static final String TITLE_TAG = "settingsActivityTitle";
