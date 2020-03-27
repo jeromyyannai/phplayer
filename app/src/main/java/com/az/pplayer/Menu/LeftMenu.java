@@ -2,6 +2,7 @@ package com.az.pplayer.Menu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 
 
@@ -46,7 +47,15 @@ public static final int SETTINGS_CHANGED=99;
         context.findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                android.os.Process.killProcess(android.os.Process.myPid());
+                activity.finishAffinity();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    activity.finishAndRemoveTask();
+                }
+
+                System.exit(0);
+
+
 
 
             }

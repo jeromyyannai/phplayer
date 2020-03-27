@@ -55,6 +55,7 @@ public class MainActivity extends CommonActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -77,6 +78,7 @@ public class MainActivity extends CommonActivity
             ShowVideos(catUrl);
         }
         mSwipyRefreshLayout = findViewById(R.id.swipyrefreshlayout);
+
         mSwipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {

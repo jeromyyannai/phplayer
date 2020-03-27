@@ -5,8 +5,7 @@
     android:id="@+id/video_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+   tools:openDrawer="start">
 
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,6 +14,8 @@
     android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+        app:resize_mode="fixed_width"
+
     android:background="@android:color/black"/>
     <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,8 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:background="@android:color/black"
+       android:background="@android:color/black"
         app:menu="@menu/video_player_menu"
         >
 

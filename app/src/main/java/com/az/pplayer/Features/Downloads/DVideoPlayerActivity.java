@@ -90,7 +90,6 @@ public class DVideoPlayerActivity extends CommonActivity {
         mIbFullScreen = (ImageButton) findViewById(R.id.exo_fullscreen_btn);
         ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(getApplicationContext(), Uri.parse(mVideoUrl), mSimpleExoPlayerView, findViewById(R.id.pBarBuffer), findViewById(R.id.container_play_pause));
         ExoPlayerVideoHandler.getInstance().goToForeground();
-        mSimpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
         SimpleExoPlayer player =(SimpleExoPlayer) mSimpleExoPlayerView.getPlayer();
         player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
         mIbFullScreen = findViewById(R.id.exo_fullscreen_btn);
