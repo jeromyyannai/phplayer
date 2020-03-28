@@ -2,6 +2,7 @@ package com.az.pplayer.Data;
 
 import com.az.pplayer.Models.VideoItemsPage;
 import com.az.pplayer.Models.VideoUrl;
+import com.az.pplayer.Storage.UserStorage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ public static String GetDefaultUrl(String key){
         return null;
     String defaultVideoLink=null;
     for (VideoUrl item : videoItems) {
-        if (item.Quality.equals("480")) {
+        if (item.Quality.contains(UserStorage.Get().getResolution())) {
             defaultVideoLink = item.Link;
             break;
         }
@@ -43,7 +44,7 @@ public static String GetDefaultUrl(String key){
             return null;
         String defaultVideoLink=null;
         for (VideoUrl item : videoItems) {
-            if (item.Quality.equals("720")) {
+            if (item.Quality.contains(UserStorage.Get().getDownloadResolution())) {
                 defaultVideoLink = item.Link;
                 break;
             }

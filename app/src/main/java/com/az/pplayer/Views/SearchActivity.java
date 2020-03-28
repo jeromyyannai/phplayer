@@ -75,7 +75,7 @@ public class SearchActivity extends CommonActivity
         menu.SetSelected("ic_search");
 
         setupPinch();
-
+        hideSystemUI();
         Video = new ArrayList<>();
 
         search();

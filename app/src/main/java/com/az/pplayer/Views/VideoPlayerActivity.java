@@ -213,7 +213,7 @@ public class VideoPlayerActivity extends CommonActivity {
         ExoPlayerVideoHandler.getInstance().goToForeground();
         SimpleExoPlayer player =(SimpleExoPlayer) mSimpleExoPlayerView.getPlayer();
         player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-
+        hideSystemUI();
         mIbFullScreen = findViewById(R.id.exo_fullscreen_btn);
         mIbFullScreen.setOnClickListener(
                 new View.OnClickListener() {
