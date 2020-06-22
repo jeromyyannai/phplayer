@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -103,7 +106,6 @@ public class VideoPlayerActivity extends CommonActivity {
     SwipyRefreshLayout mSwipyRefreshLayout;
     VisibleView visibleView;
     DownloadRequest request;
-
     private boolean shouldDestroyVideo = true;
 
     private String[] Tags;
@@ -127,6 +129,7 @@ public class VideoPlayerActivity extends CommonActivity {
         NavigationView nv = (NavigationView)findViewById(R.id.video_nav_view);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
+            @SuppressLint("SourceLockedOrientationActivity")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
@@ -144,6 +147,13 @@ public class VideoPlayerActivity extends CommonActivity {
                         if (request != null)
                         DownloadService.Get().Download(new LocalVideoItem(request));
                         break;
+                    case R.id.nav_rotate:
+                        if (getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        else
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+                        break;
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.video_drawer_layout);
                 drawer.closeDrawer(Gravity.LEFT);
@@ -153,7 +163,21 @@ public class VideoPlayerActivity extends CommonActivity {
         });
     }
 
-
+    public int getScreenOrientation()
+    {
+        Display getOrient = getWindowManager().getDefaultDisplay();
+        int orientation = Configuration.ORIENTATION_UNDEFINED;
+        if(getOrient.getWidth()==getOrient.getHeight()){
+            orientation = Configuration.ORIENTATION_SQUARE;
+        } else{
+            if(getOrient.getWidth() < getOrient.getHeight()){
+                orientation = Configuration.ORIENTATION_PORTRAIT;
+            }else {
+                orientation = Configuration.ORIENTATION_LANDSCAPE;
+            }
+        }
+        return orientation;
+    }
 
     void LoadVideo(){
         String videoUrl = VideoLinkHolder.GetDefaultUrl(mVideoUrl.Video);

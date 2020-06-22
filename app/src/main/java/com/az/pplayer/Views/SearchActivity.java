@@ -177,7 +177,7 @@ public class SearchActivity extends CommonActivity
                             });
                         }
                         ShowVideos(catUrl);
-
+                        hideSystemUI();
                     }
                 });
             }

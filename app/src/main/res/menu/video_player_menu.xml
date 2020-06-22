@@ -16,6 +16,10 @@
             android:id="@+id/nav_download"
             android:icon="@drawable/ic_file_download"
             android:title="Download" />
+        <item
+            android:id="@+id/nav_rotate"
+            android:icon="@drawable/ic_rotate"
+            android:title="Rotate" />
 
     </group>
 
