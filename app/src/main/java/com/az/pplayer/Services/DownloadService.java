@@ -162,7 +162,7 @@ public class DownloadService {
         public void onCompleted(@NotNull Download download) {
             super.onCompleted(download);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            LocalVideoItem request = DataStorage.Get().GetRequest(download.getId());
+            LocalVideoItem request = DataStorage.Get().GetRequest(download.getId(), download.getUrl());
             if (request == null)
                 return;
             notificationManager.cancel(request.Request.FetchId);
@@ -173,7 +173,7 @@ public class DownloadService {
         @Override
         public void onProgress(@NotNull Download download, long etaInMilliSeconds, long downloadedBytesPerSecond) {
             super.onProgress(download, etaInMilliSeconds, downloadedBytesPerSecond);
-            LocalVideoItem request = DataStorage.Get().GetRequest(download.getId());
+            LocalVideoItem request = DataStorage.Get().GetRequest(download.getId(),download.getUrl());
             if (request == null)
                 return;
             int id = request.Request.FetchId;

@@ -24,15 +24,22 @@ public class DataStorage {
 private com.az.pplayer.Storage.Db.db db;
     public DataStorage(Context appContext) {
         db = new db(appContext);
+
+
+    }
+    public void init(final Runnable action){
         db.getVideoItems(new Consumer<List<LocalVideoItem>>() {
             @Override
             public void accept(List<LocalVideoItem> localVideoItems) {
                 VideoItems.setValue(localVideoItems);
+                if (action != null)
+                    action.run();
             }
         });
-
     }
-
+    public static void Init(Runnable action){
+        ourInstance.init(action);
+    }
     public static DataStorage Get() {
         if (ourInstance == null)
             ourInstance = new DataStorage(PhpPlayerApp.getAppContext());
@@ -82,10 +89,19 @@ private com.az.pplayer.Storage.Db.db db;
     }
 
 
-    public LocalVideoItem GetRequest(int id){
+    public LocalVideoItem GetRequest(int id,String url){
         for (int i=0;i<VideoItems.getValue().size();i++){
             if (id ==VideoItems.getValue().get(i).Request.FetchId ||  id ==-VideoItems.getValue().get(i).Request.FetchId){
                 return  VideoItems.getValue().get(i);
+            }
+        }
+        String[] urlParts = url.split("/");
+        if (urlParts.length>1){
+            String videoId = urlParts[urlParts.length-2];
+            for (int i=0;i<VideoItems.getValue().size();i++){
+                if (VideoItems.getValue().get(i).Request.VideoId.equals(videoId)){
+                    return  VideoItems.getValue().get(i);
+                }
             }
         }
         return null;

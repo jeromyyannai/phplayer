@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.az.pplayer.Services.DownloadService;
+import com.az.pplayer.Storage.DataStorage;
 
 public class PhpPlayerApp extends Application {
     private static Context context;
@@ -11,7 +12,13 @@ public class PhpPlayerApp extends Application {
     public void onCreate() {
         super.onCreate();
         PhpPlayerApp.context = getApplicationContext();
-        DownloadService.Get();
+        DataStorage.Get().init(new Runnable() {
+            @Override
+            public void run() {
+                DownloadService.Get();
+            }
+        });
+
     }
 
     public static Context getAppContext() {
