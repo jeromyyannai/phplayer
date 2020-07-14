@@ -142,7 +142,12 @@ public class SearchActivity extends CommonActivity
     String prepareUrl(){
         if (searchPattern==null || searchPattern=="")
             return Url.MainUrl;
-        return Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+UserStorage.Get().getSearchOrder();
+        CategoryItem category = UserStorage.Get().getCurrectCategory();
+        String categoryPart = "";
+        if (category != null)
+            categoryPart = "&filter_category="+category.Id;
+        return  Url.MainUrl +"/video/search?search="+searchPattern.replace(' ', '+')+categoryPart+
+                UserStorage.Get().getSearchOrder();
 
 
 

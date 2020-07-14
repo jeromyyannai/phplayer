@@ -93,6 +93,7 @@ public class CategoryDataAdapter extends RecyclerView.Adapter<CategoryDataAdapte
             Intent intent = new Intent(v.view.getContext(),MainActivity.class);
             intent.putExtra("url",new Gson().toJson(v.item));
             UserStorage.Get().AddCategory(v.item);
+            UserStorage.Get().SetCurrentCategory(v.item);
             v.view.getContext().startActivity(intent);
             return super.onSingleTapConfirmed(e);
         }

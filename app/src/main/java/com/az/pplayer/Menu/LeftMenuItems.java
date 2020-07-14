@@ -21,7 +21,7 @@ public class LeftMenuItems {
         items.add(new MenuItem("Downloads", R.drawable.ic_file_download, "ic_downloads",false));
        List<CategoryStorageItem> cats =  UserStorage.Get().getRescentCats();
         for (CategoryItem item: cats){
-            InsertCategory(new CategoryItem(item.Title,item.Link,item.Image));
+            InsertCategory(new CategoryItem(item.Title,item.Link,item.Image, item.Id));
         }
     }
 

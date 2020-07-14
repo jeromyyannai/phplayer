@@ -105,19 +105,29 @@ public class UserStorage {
     public void AddCategory(CategoryItem item){
         if (rescentCats == null)
             rescentCats = new ArrayList<>();
-        rescentCats.add(new CategoryStorageItem(item));
-        Collections.sort(rescentCats, Collections.reverseOrder( new Comparator<CategoryStorageItem>() {
-            @Override
-            public int compare(CategoryStorageItem item1, CategoryStorageItem item2) {
-                return item1.date.compareTo(item2.date);
-            }
-        }));
-        while (rescentCats.size()>maxRescentcats)
-            rescentCats.remove(rescentCats.size()-1);
+        if (!rescentCatsContains(item)) {
+            rescentCats.add(new CategoryStorageItem(item));
+            Collections.sort(rescentCats, Collections.reverseOrder(new Comparator<CategoryStorageItem>() {
+                @Override
+                public int compare(CategoryStorageItem item1, CategoryStorageItem item2) {
+                    return item1.date.compareTo(item2.date);
+                }
+            }));
+            while (rescentCats.size() > maxRescentcats)
+                rescentCats.remove(rescentCats.size() - 1);
 
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("rescentCats", new Gson().toJson(rescentCats));
-        editor.commit();
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("rescentCats", new Gson().toJson(rescentCats));
+            editor.commit();
+        }
+    }
+
+    private boolean rescentCatsContains(CategoryItem item) {
+        for (int i=0; i<rescentCats.size();i++){
+            if (rescentCats.get(i).Title.equals(item.Title))
+                return true;
+        }
+        return false;
     }
 
     public int getColumns() {
@@ -197,5 +207,12 @@ public class UserStorage {
             e.printStackTrace();
         }
         return "";
+    }
+    private  CategoryItem CurrectCategory;
+    public void SetCurrentCategory(CategoryItem item) {
+        CurrectCategory = item;
+    }
+    public CategoryItem getCurrectCategory(){
+        return CurrectCategory;
     }
 }

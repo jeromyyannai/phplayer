@@ -48,7 +48,7 @@ public class CategoryViewActivity  extends CommonActivity implements PinchView.I
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        UserStorage.Get().SetCurrentCategory(null);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

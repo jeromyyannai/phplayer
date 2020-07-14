@@ -68,7 +68,7 @@ public static final int SETTINGS_CHANGED=99;
         SetSelected(item.Id);
         if (item.Type == MenuItem.MenuType.Link){
             Intent intent = new Intent(context, MainActivity.class);
-            intent.putExtra("url",new Gson().toJson(new CategoryItem(item.getName(), item.Link,null)));
+            intent.putExtra("url",new Gson().toJson(new CategoryItem(item.getName(), item.Link,null,item.Id)));
 
             context.startActivity(intent);
             return;

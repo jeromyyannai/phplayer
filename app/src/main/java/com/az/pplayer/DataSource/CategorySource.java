@@ -19,17 +19,18 @@ public class CategorySource {
         try {
 
             Document doc = Jsoup.connect(url).timeout(0).get();
-            Elements as = doc.select("li.cat_pic>div>a");
+            Elements as = doc.select("li.catPic>div>a");
 
             for (Element el: as)
             {
                 Element image = el.select("img").first();
                 String imgUrl = image.attr("data-thumb_url");
+                String id = el.parent().parent().attr("data-category");
                 if (imgUrl =="")
                      imgUrl = image.attr("src");
 
                 cateories.add(new CategoryItem(el.attr("data-mxptext"),
-                        el.attr("href"),imgUrl
+                        el.attr("href"),imgUrl, id
                         ));
             }
 
