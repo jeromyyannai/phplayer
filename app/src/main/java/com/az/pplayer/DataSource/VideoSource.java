@@ -1,5 +1,6 @@
 package com.az.pplayer.DataSource;
 
+import com.az.pplayer.Base.SSLHelper;
 import com.az.pplayer.Models.VideoLinks;
 import com.az.pplayer.Models.VideoUrl;
 
@@ -16,7 +17,7 @@ public class VideoSource {
         String defaultUrl ="";
 
         try {
-            Document doc = Jsoup.connect("https://pornhub.com"+link).get();
+            Document doc = SSLHelper.getDocUrl("https://pornhub.com"+link);
             Element script = doc.select("#player").select("script").first();
 
             String rawHtml = script.html().substring(0,6553);

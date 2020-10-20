@@ -2,6 +2,7 @@ package com.az.pplayer.Services;
 
 import android.util.Log;
 
+import com.az.pplayer.Base.SSLHelper;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.Data.VideoLinkHolder;
 import com.az.pplayer.DataSource.VideoLinksSource;
@@ -29,7 +30,7 @@ public class ParserService {
         String defaultUrl = "";
 
         try {
-            Document doc = Jsoup.connect("https://pornhub.com" + mVideoUrl.Video).timeout(0).get();
+            Document doc = SSLHelper.getDocUrl("https://pornhub.com" + mVideoUrl.Video);
             Element script = doc.select("#player").select("script").first();
             Duktape duktape = Duktape.create();
             List<VideoUrlBind> videoUrls = new ArrayList<>();

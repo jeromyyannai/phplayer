@@ -6,7 +6,9 @@ import android.content.Context;
 import com.az.pplayer.Services.DownloadService;
 import com.az.pplayer.Storage.DataStorage;
 
-public class PhpPlayerApp extends Application {
+import androidx.multidex.MultiDexApplication;
+
+public class PhpPlayerApp extends MultiDexApplication {
     private static Context context;
 
     public void onCreate() {

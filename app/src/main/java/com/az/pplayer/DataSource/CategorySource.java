@@ -1,5 +1,7 @@
 package com.az.pplayer.DataSource;
 
+import com.az.pplayer.Base.NoSSLv3SocketFactory;
+import com.az.pplayer.Base.SSLHelper;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
 
@@ -8,17 +10,28 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
+import info.guardianproject.netcipher.NetCipher;
+
+import com.az.pplayer.Base.SSLHelper;
 
 public class CategorySource {
     public static List<CategoryItem> GetCategories(String url){
         url = "https://www.pornhub.com/categories";
         List<CategoryItem> cateories = new ArrayList<>();
         try {
-
-            Document doc = Jsoup.connect(url).timeout(0).get();
+            Document doc = SSLHelper.getDocUrl(url);
             Elements as = doc.select("li.catPic>div>a");
 
             for (Element el: as)
@@ -36,10 +49,12 @@ public class CategorySource {
 
 
         }
-        catch (IOException e) {
+        catch ( Exception e) {
             e.printStackTrace();
         }
         return cateories;
     }
+
+
 
 }

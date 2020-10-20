@@ -1,5 +1,6 @@
 package com.az.pplayer.DataSource;
 
+import com.az.pplayer.Base.SSLHelper;
 import com.az.pplayer.Data.DataHolder;
 import com.az.pplayer.Models.VideoItem;
 import com.az.pplayer.Models.VideoLinks;
@@ -18,8 +19,9 @@ public class VideoLinksSource {
     public static List<VideoItem> ParseLinks(String link){
         List<VideoItem> Video = new ArrayList<>();
         try {
-
             Document doc = Jsoup.connect(link).get();
+
+           // Document doc = SSLHelper.getDocUrl(link);
             return ParseLinks(doc);
 
 
