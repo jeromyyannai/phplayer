@@ -4,6 +4,7 @@ import android.net.rtp.RtpStream;
 
 import com.az.pplayer.Constants.Url;
 import com.az.pplayer.Data.DataHolder;
+import com.az.pplayer.Storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +65,9 @@ public class VideoItemsPage {
 
     public String FullUrl(){
 
-
+        boolean hdOnly = UserStorage.Get().IsHdOnly();
+        if (hdOnly)
+            uri +=(uri.indexOf('?') == -1 ? "?" : "&")+"hd=1";
         if (currentPageNumber<1)
             return  uri;
         return uri + (uri.indexOf('?') == -1 ? "?" : "&") + "page=" + currentPageNumber;

@@ -31,4 +31,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="columns_count">Columns</string>
+    <string name="hd_video_only">HD video only</string>
 </resources>

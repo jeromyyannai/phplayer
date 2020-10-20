@@ -58,6 +58,7 @@ public class UserStorage {
         SearchMode = preferences.getString("search_mode","most_rescent");
         downloadResolution = preferences.getString("download_resolution","720");
         HashedPassword = preferences.getString("signature","9f6992966d4c363ea0162a56cb45fe5");
+        hdOnly = preferences.getBoolean("hd_only",true);
     }
 
     private String resolution = "480";
@@ -70,6 +71,7 @@ public class UserStorage {
     private boolean PasswordProtection = true;
     private String downloadPath;
     public String SearchMode;
+    private boolean hdOnly;
     public String getResolution(){
         return  resolution;
     }
@@ -214,5 +216,9 @@ public class UserStorage {
     }
     public CategoryItem getCurrectCategory(){
         return CurrectCategory;
+    }
+
+    public boolean IsHdOnly() {
+        return hdOnly;
     }
 }

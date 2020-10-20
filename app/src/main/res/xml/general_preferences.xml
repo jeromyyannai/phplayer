@@ -57,4 +57,7 @@
         app:key="download_resolution"
         app:title="@string/download_resolution"
         app:useSimpleSummaryProvider="true" />
+    <SwitchPreferenceCompat
+        app:key="hd_only"
+        app:title="@string/hd_video_only" />
 </PreferenceScreen>
