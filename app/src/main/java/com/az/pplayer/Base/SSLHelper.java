@@ -32,12 +32,12 @@ public class SSLHelper {
         netCipherconnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Whale/2.8.107.17 Safari/537.36");
         netCipherconnection.connect();
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(netCipherconnection.getInputStream()));
-        StringBuilder stringBuilder = new StringBuilder();
-        String stringHTML;
-        while ((stringHTML = bufferedReader.readLine()) != null)
-            stringBuilder.append(stringHTML);
-        bufferedReader.close();
-        return Jsoup.parse(String.valueOf(stringBuilder));
+//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(netCipherconnection.getInputStream()));
+//        StringBuilder stringBuilder = new StringBuilder();
+//        String stringHTML;
+//        while ((stringHTML = bufferedReader.readLine()) != null)
+//            stringBuilder.append(stringHTML);
+//        bufferedReader.close();
+        return Jsoup.parse(netCipherconnection.getInputStream(),null,"");
     }
 }

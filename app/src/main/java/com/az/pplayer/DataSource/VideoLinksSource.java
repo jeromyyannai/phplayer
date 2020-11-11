@@ -19,9 +19,7 @@ public class VideoLinksSource {
     public static List<VideoItem> ParseLinks(String link){
         List<VideoItem> Video = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(link).get();
-
-           // Document doc = SSLHelper.getDocUrl(link);
+            Document doc = SSLHelper.getDocUrl(link);
             return ParseLinks(doc);
 
 

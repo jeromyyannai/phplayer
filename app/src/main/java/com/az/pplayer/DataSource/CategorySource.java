@@ -1,6 +1,5 @@
 package com.az.pplayer.DataSource;
 
-import com.az.pplayer.Base.NoSSLv3SocketFactory;
 import com.az.pplayer.Base.SSLHelper;
 import com.az.pplayer.Models.CategoryItem;
 import com.az.pplayer.Models.VideoItem;
